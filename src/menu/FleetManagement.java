@@ -17,6 +17,7 @@ public class FleetManagement {
         while(true) {
             System.out.println("- - - Fleet Management Menu - - -");
             System.out.println("1. Add Boat | 2. Remove Boat | 3. Assign Crew Automatically");
+            System.out.println("4. Back");
             option = input.nextInt();
             input.nextLine();
             switch (option) {
@@ -29,6 +30,9 @@ public class FleetManagement {
                 case 3:
                     assignCrew(boats, employees);
                     break;
+                case 4:
+                    System.out.println("Back to Main Manu");
+                    return;
                 default:
                     System.out.println("Invalid option");
                     break;

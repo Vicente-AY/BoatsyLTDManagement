@@ -18,7 +18,7 @@ public class EmployeeManagement {
         while(true) {
             System.out.println("- - - Employee Management Menu - - -");
             System.out.println("1. Add Employee | 2. Remove Employee | 3. Assign Employee to a boat");
-            System.out.println("4. List of Employees | 5. Employee Info | 6. Exit");
+            System.out.println("4. List of Employees | 5. Employee Info | 6. Back");
             option = input.nextInt();
             switch(option) {
                 case 1:
@@ -37,7 +37,7 @@ public class EmployeeManagement {
                     employeeInfo(employees);
                     break;
                 case 6:
-                    System.out.println("Exit Employee Management Menu");
+                    System.out.println("Back to Main Menu");
                     return;
                 default:
                     System.out.println("Invalid option");
