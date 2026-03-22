@@ -216,6 +216,7 @@ public class EmployeeManagement {
 
                                 captainToExchange.setAssignedBoat(boatToExchange);
                                 boatToExchange.setCaptain(captainToExchange);
+                                System.out.println("Exchange Completed");
                                 break;
                             case 2:
                                 boatToAssign.setCaptain(captain);
@@ -223,6 +224,7 @@ public class EmployeeManagement {
 
                                 boatToExchange.setCaptain(null);
                                 captainToExchange.setAssignedBoat(null);
+                                System.out.println("Change Completed");
                                 break;
                             case 3:
                                 System.out.println("Cancelling operation");
@@ -255,6 +257,7 @@ public class EmployeeManagement {
                         boatToAssign.getCaptain().setAssignedBoat(null);
                         boatToAssign.setCaptain(captain);
                         captain.setAssignedBoat(boatToAssign);
+                        System.out.println("Change completed");
                     }
                 }
             }
@@ -277,7 +280,13 @@ public class EmployeeManagement {
             }
             else if(boatToAssign.getAssignedFM() != null){
                 System.out.println("The boat has already been assigned to the Fleet Manager " + boatToAssign.getAssignedFM().getId() + " " + boatToAssign.getAssignedFM().getName() + " " + boatToAssign.getAssignedFM().getSurnames());
-                return;
+                boolean change = changeBoat();
+                if(change){
+                    boatToAssign.getAssignedFM().getManagedBoats().remove(boatToAssign);
+                    boatToAssign.setAssignedFM(fleetManager);
+                    fleetManager.getManagedBoats().add(boatToAssign);
+                    System.out.println("Change completed");
+                }
             }
             else{
                 fleetManager.getManagedBoats().add(boatToAssign);
