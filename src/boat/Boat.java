@@ -1,11 +1,11 @@
 package boat;
 
 import employee.Captain;
-import employee.Employee;
 import employee.FleetManager;
 import employee.Sailor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
@@ -14,17 +14,17 @@ public abstract class Boat {
     int id = 0;
     String name = "";
     double weight = 0.0;
-    int maxVelocity = 0;
-    int maxDistance = 0;
+    double maxVelocity = 0;
+    double maxDistance = 0;
     double currentDistanceLeft = 0;
     int maxCrew = 0;
-    double daysUntilArrival = 0;
+    double hoursUntilArrival = 0;
     ArrayList<Sailor> crew = new ArrayList<Sailor>();
     FleetManager assignedFM = null;
     Captain captain = null;
-    LocalDate sailDate = null;
-    LocalDate dateOfArrival = null;
-    LocalDate lastChecked = null;
+    LocalDateTime sailDate = null;
+    LocalDateTime dateOfArrival = null;
+    LocalDateTime lastChecked = null;
 
 
     public Boat(int id, String name, double weight, int maxVelocity, int maxDistance, int maxCrew) {
@@ -36,36 +36,14 @@ public abstract class Boat {
         this.maxCrew = maxCrew;
     }
 
-    public void setSail(double distance){
-
-        if(distance > this.maxDistance){
-            System.out.println("Sail out of bounds!");
-        }
-        else if(this.captain == null){
-            System.out.println("The captain has not been set!");
-        }
-        else if(this.crew.size() < (this.maxCrew / 2)){
-            System.out.println("Not enough crew!");
-        }
-        else{
-            System.out.println("Setting course");
-            int hours = (int) (distance / this.maxVelocity);
-            int days = hours / 24;
-            this.daysUntilArrival = days;
-            System.out.println(days  + " Days until arrival");
-            this.sailDate = LocalDate.now();
-            this.lastChecked = this.sailDate;
-            this.dateOfArrival = this.sailDate.plusDays(days);
-            this.currentDistanceLeft = distance;
-        }
-    }
+    public abstract void setSail(double distnace);
 
     public void newArrivalDate(Boat boat){
 
         LocalDate currentDate = LocalDate.now();
-        long diffHours = ChronoUnit.HOURS.between(this.lastChecked, currentDate);
+        double diffHours = ChronoUnit.HOURS.between(this.lastChecked, currentDate);
         if(diffHours > 0) {
-            long coveredDistance = diffHours * this.maxVelocity;
+            double coveredDistance = diffHours * this.maxVelocity;
             this.currentDistanceLeft -= coveredDistance;
             this.lastChecked = currentDate;
         }
