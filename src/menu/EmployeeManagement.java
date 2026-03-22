@@ -17,7 +17,6 @@ public class EmployeeManagement {
         int option = 0;
         while(true) {
             System.out.println("- - - Employee Management Menu - - -");
-            System.out.println("Type your option:");
             System.out.println("1. Add Employee | 2. Remove Employee | 3. Assign Employee to a boat");
             System.out.println("4. List of Employees | 5. Employee Info | 6. Exit");
             option = input.nextInt();
@@ -51,7 +50,7 @@ public class EmployeeManagement {
 
         int option = 0;
         while(true) {
-            System.out.println("Type your option:");
+            System.out.println("Select the type of employee you want to add");
             System.out.println("1. Add Sailor | 2. Add Captain | 3. Add Fleet Manager");
             System.out.println("4. Back");
             option = input.nextInt();
@@ -76,7 +75,7 @@ public class EmployeeManagement {
         }
     }
 
-    public void removeEmployee(ArrayList<Employee> employee){
+    public void removeEmployee(ArrayList<Employee> employees){
 
         Employee employeeToRemove = null;
 
@@ -84,28 +83,28 @@ public class EmployeeManagement {
         int id = input.nextInt();
         input.nextLine();
 
-        for(Employee e: employee){
+        for(Employee e: employees){
             if(e.getId() == id){
                 employeeToRemove = e;
             }
         }
         if(employeeToRemove != null) {
             if (employeeToRemove instanceof Sailor) {
-                System.out.println("Are you sure you want to remove Sailor " + employeeToRemove.getName() + " " + employeeToRemove.getSurnames());
+                System.out.println("Are you sure you want to remove Sailor " + employeeToRemove.getName() + " " + employeeToRemove.getSurnames() + "?");
             }
             if (employeeToRemove instanceof Captain) {
-                System.out.println("Are you sure you want to remove Captain " + employeeToRemove.getName() + " " + employeeToRemove.getSurnames());
+                System.out.println("Are you sure you want to remove Captain " + employeeToRemove.getName() + " " + employeeToRemove.getSurnames() + "?");
             }
             if (employeeToRemove instanceof FleetManager) {
-                System.out.println("Are you sure you want to remove Fleet Manager " + employeeToRemove.getName() + " " + employeeToRemove.getSurnames());
+                System.out.println("Are you sure you want to remove Fleet Manager " + employeeToRemove.getName() + " " + employeeToRemove.getSurnames() + "?");
             }
             System.out.println("Y / N");
             String choice = input.nextLine();
             if (choice.equalsIgnoreCase("y") || choice.equalsIgnoreCase("yes")) {
-                System.out.println("Removing Employee");
-                employee.remove(employeeToRemove);
+                employees.remove(employeeToRemove);
+                System.out.println("Employee " +  employeeToRemove.getName() + " " + employeeToRemove.getSurnames() + " removed successfully");
             } else {
-                System.out.println("Cancelling");
+                System.out.println("Cancelling operation");
             }
         }
         else{
@@ -131,82 +130,82 @@ public class EmployeeManagement {
                 employeeToAssign = e;
             }
         }
+        if(employeeToAssign == null) {
+            System.out.println("Employee not found");
+            return;
+        }
+
         for(Boat boat: boats){
             if(boat.getId() == boatId){
                 boatToAssign = boat;
             }
         }
-        if(employeeToAssign == null) {
-            System.out.println("Employee not found");
-            return;
-        }
-        else if(boatToAssign == null){
+        if(boatToAssign == null){
             System.out.println("Boat not found");
             return;
         }
-        else{
-            if(employeeToAssign instanceof Sailor) {
-                Sailor sailor = (Sailor) employeeToAssign;
-                if(sailor.getAssignedBoat() == boatToAssign){
-                    System.out.println("The Sailor is already assigned to that boat");
-                    return;
-                }
-                else if(sailor.getAssignedBoat() != null){
-                    System.out.println("The Sailor is already assigned to the Boat " + sailor.getAssignedBoat().getId() + " " + sailor.getAssignedBoat().getName());
-                    return;
-                }
-                else if(boatToAssign.getCrew().size() >= boatToAssign.getMaxCrew()){
-                    System.out.println("The boat is fully crewed");
-                    return;
-                }
-                else{
-                    sailor.setAssignedBoat(boatToAssign);
-                    boatToAssign.getCrew().add(sailor);
-                    System.out.println("Sailor " +  sailor.getId() + " " + sailor.getName() + " " + sailor.getSurnames() + " Assigned to " + boatToAssign.getId() + " " + boatToAssign.getName() + " Successfully");
-                    return;
-                }
+
+        if(employeeToAssign instanceof Sailor) {
+            Sailor sailor = (Sailor) employeeToAssign;
+            if(sailor.getAssignedBoat() == boatToAssign){
+                System.out.println("The Sailor is already assigned to that boat");
+                return;
             }
-            else if(employeeToAssign instanceof Captain) {
-                Captain captain = (Captain) employeeToAssign;
-                if(captain.getAssignedBoat() == boatToAssign){
-                    System.out.println("The Captain is already assigned to that boat");
-                    return;
-                }
-                else if(captain.getAssignedBoat() != null){
-                    System.out.println("The Captain is already assiged to the Boat " + captain.getAssignedBoat().getId() + " " + captain.getAssignedBoat().getName());
-                    return;
-                }
-                else if(boatToAssign.getCaptain() != null){
-                    System.out.println("The Boat has the captain " + boatToAssign.getCaptain().getId() + " " + boatToAssign.getCaptain().getName() + " " + boatToAssign.getCaptain().getSurnames());
-                    return;
-                }
-                else{
-                    captain.setAssignedBoat(boatToAssign);
-                    boatToAssign.setCaptain(captain);
-                    System.out.println("Captain " +  captain.getId() + " " + captain.getName() + " " + captain.getSurnames() + " Assigned to " + boatToAssign.getId() + " " + boatToAssign.getName() + " Successfully");
-                    return;
-                }
+            else if(sailor.getAssignedBoat() != null){
+                System.out.println("The Sailor is already assigned to the Boat " + sailor.getAssignedBoat().getId() + " " + sailor.getAssignedBoat().getName());
+                return;
             }
-            else if(employeeToAssign instanceof FleetManager) {
-                FleetManager fleetManager = (FleetManager) employeeToAssign;
-                if(fleetManager.getManagedBoats().size() > 5){
-                    System.out.println("The Fleet Manager has the maximum managed boats assigned");
-                    return;
-                }
-                else if(boatToAssign.getAssignedFM() == fleetManager){
-                    System.out.println("The Fleet Manager is already managing that boat");
-                    return;
-                }
-                else if(boatToAssign.getAssignedFM() != null){
-                    System.out.println("The boat has already been assigned to the Fleet Manager " + boatToAssign.getAssignedFM().getId() + " " + boatToAssign.getAssignedFM().getName() + " " + boatToAssign.getAssignedFM().getSurnames());
-                    return;
-                }
-                else{
-                    fleetManager.getManagedBoats().add(boatToAssign);
-                    boatToAssign.setAssignedFM(fleetManager);
-                    System.out.println("Captain " +  fleetManager.getId() + " " + fleetManager.getName() + " " + fleetManager.getSurnames() + " Assigned to " + boatToAssign.getId() + " " + boatToAssign.getName() + " Successfully");
-                    return;
-                }
+            else if(boatToAssign.getCrew().size() >= boatToAssign.getMaxCrew()){
+                System.out.println("The boat is fully crewed");
+                return;
+            }
+            else{
+                sailor.setAssignedBoat(boatToAssign);
+                boatToAssign.getCrew().add(sailor);
+                System.out.println("Sailor " +  sailor.getId() + " " + sailor.getName() + " " + sailor.getSurnames() + " Assigned to " + boatToAssign.getId() + " " + boatToAssign.getName() + " Successfully");
+                return;
+            }
+        }
+        else if(employeeToAssign instanceof Captain) {
+            Captain captain = (Captain) employeeToAssign;
+            if(captain.getAssignedBoat() == boatToAssign){
+                System.out.println("The Captain is already assigned to that boat");
+                return;
+            }
+            else if(captain.getAssignedBoat() != null){
+                System.out.println("The Captain is already assiged to the Boat " + captain.getAssignedBoat().getId() + " " + captain.getAssignedBoat().getName());
+                return;
+            }
+            else if(boatToAssign.getCaptain() != null){
+                System.out.println("The Boat has the captain " + boatToAssign.getCaptain().getId() + " " + boatToAssign.getCaptain().getName() + " " + boatToAssign.getCaptain().getSurnames());
+                return;
+            }
+            else{
+                captain.setAssignedBoat(boatToAssign);
+                boatToAssign.setCaptain(captain);
+                System.out.println("Captain " +  captain.getId() + " " + captain.getName() + " " + captain.getSurnames() + " Assigned to " + boatToAssign.getId() + " " + boatToAssign.getName() + " Successfully");
+                return;
+            }
+        }
+        else if(employeeToAssign instanceof FleetManager) {
+            FleetManager fleetManager = (FleetManager) employeeToAssign;
+            if(fleetManager.getManagedBoats().size() >= 5){
+                System.out.println("The Fleet Manager has the maximum managed boats assigned");
+                return;
+            }
+            else if(boatToAssign.getAssignedFM() == fleetManager){
+                System.out.println("The Fleet Manager is already managing that boat");
+                return;
+            }
+            else if(boatToAssign.getAssignedFM() != null){
+                System.out.println("The boat has already been assigned to the Fleet Manager " + boatToAssign.getAssignedFM().getId() + " " + boatToAssign.getAssignedFM().getName() + " " + boatToAssign.getAssignedFM().getSurnames());
+                return;
+            }
+            else{
+                fleetManager.getManagedBoats().add(boatToAssign);
+                boatToAssign.setAssignedFM(fleetManager);
+                System.out.println("Captain " +  fleetManager.getId() + " " + fleetManager.getName() + " " + fleetManager.getSurnames() + " Assigned to " + boatToAssign.getId() + " " + boatToAssign.getName() + " Successfully");
+                return;
             }
         }
     }
@@ -259,9 +258,14 @@ public class EmployeeManagement {
                 System.out.println("Fleet Manager Info");
                 System.out.println(fleetManagerInfo.getId() + " " + fleetManagerInfo.getName() + " " + fleetManagerInfo.getSurnames() +
                         " " + fleetManagerInfo.getContractStartDate() + " " + fleetManagerInfo.getSalary() + " " + fleetManagerInfo.getExperience());
-                System.out.println("Is managing the current Fleet");
-                for(Boat b : fleetManagerInfo.getManagedBoats()){
-                    System.out.println(b.getId() + " " + b.getName());
+                if(!fleetManagerInfo.getManagedBoats().isEmpty()) {
+                    System.out.println("Is managing the current Fleet");
+                    for (Boat b : fleetManagerInfo.getManagedBoats()) {
+                        System.out.println(b.getId() + " " + b.getName());
+                    }
+                }
+                else{
+                    System.out.println("The Fleet Manager is currently no managin any ship");
                 }
             }
         }

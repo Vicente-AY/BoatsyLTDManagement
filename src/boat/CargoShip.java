@@ -17,7 +17,7 @@ public class CargoShip extends Boat {
         this.engine = engine;
     }
 
-    public void createCargo(ArrayList<Boat> boats) {
+    public static void createCargo(ArrayList<Boat> boats) {
 
         Scanner input = new Scanner(System.in);
 

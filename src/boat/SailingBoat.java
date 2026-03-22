@@ -17,7 +17,7 @@ public class SailingBoat extends Boat{
         this.maxPassengers = maxPassengers;
     }
 
-    public void createSailingBoat(ArrayList<Boat> boats){
+    public static void createSailingBoat(ArrayList<Boat> boats){
 
         Scanner input = new Scanner(System.in);
 

@@ -30,7 +30,7 @@ public class Menu {
                     break;
                 case 2:
                     FleetManagement fleetManagement = new FleetManagement();
-                    fleetManagement.fleetManagementMenu();
+                    fleetManagement.fleetManagementMenu(boats, employees);
                     break;
                 case 3:
                     System.out.println("Have a nice day!");

@@ -17,7 +17,7 @@ public class MotorBoat extends Boat{
         this.maxPassengers = maxPassengers;
     }
 
-    public void createMotorBoat(ArrayList<Boat> boats) {
+    public static void createMotorBoat(ArrayList<Boat> boats) {
 
         Scanner input = new Scanner(System.in);
 
