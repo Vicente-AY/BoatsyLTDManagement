@@ -98,4 +98,10 @@ public abstract class Boat {
     public String getName(){
         return name;
     }
+    public double getCurrentDistanceLeft(){
+        return currentDistanceLeft;
+    }
+    public void setCurrentDistanceLeft(double distance){
+        this.currentDistanceLeft = distance;
+    }
 }
