@@ -45,6 +45,7 @@ public class FleetManager extends Employee {
 
         FleetManager newFM = new FleetManager(id, name, surnames, contractStartDate, salary, experience);
         employees.add(newFM);
+        System.out.println("New Fleet Manager with ID: " + newFM.getId() + " named: " + newFM.getName() + " " + newFM.getSurnames() + " created Successfully");
     }
 
     public void calculateSalaryBonus(){

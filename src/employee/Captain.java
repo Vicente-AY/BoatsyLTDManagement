@@ -50,6 +50,7 @@ public class Captain extends Employee{
 
         Captain newCaptain = new Captain(id, name, surnames, contractStartDate, salary, experience, bonus);
         employees.add(newCaptain);
+        System.out.println("New Captain with ID: " + newCaptain.getId() + " named: " + newCaptain.getName() + " " + newCaptain.getSurnames() + " created Successfully");
     }
 
     public void calculateSalaryBonus(){
@@ -75,5 +76,11 @@ public class Captain extends Employee{
     }
     public void setMonthDistance(double monthDistance){
         this.monthDistance = monthDistance;
+    }
+    public int getTrips(){
+        return this.trips;
+    }
+    public void setTrips(int trips){
+        this.trips = trips;
     }
 }

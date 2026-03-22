@@ -87,4 +87,9 @@ public class MotorBoat extends Boat{
         boats.add(newMB);
         System.out.println("Motor Boat added to the fleet!");
     }
+
+    @Override
+    public void setSail(double distance){
+
+    }
 }

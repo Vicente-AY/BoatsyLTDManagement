@@ -40,7 +40,7 @@ public abstract class Boat {
 
     public void newArrivalDate(Boat boat){
 
-        LocalDate currentDate = LocalDate.now();
+        LocalDateTime currentDate = LocalDateTime.now();
         double diffHours = ChronoUnit.HOURS.between(this.lastChecked, currentDate);
         if(diffHours > 0) {
             double coveredDistance = diffHours * this.maxVelocity;
@@ -56,10 +56,10 @@ public abstract class Boat {
     public double getWeight() {
         return weight;
     }
-    public int getMaxVelocity() {
+    public double getMaxVelocity() {
         return maxVelocity;
     }
-    public int getMaxDistance() {
+    public double getMaxDistance() {
         return maxDistance;
     }
     public int getMaxCrew() {

@@ -214,13 +214,13 @@ public class EmployeeManagement {
 
         for(Employee employee : employees){
             if(employee instanceof Captain) {
-                System.out.println("Captain: " + employee.getId() + " " + employee.getName() + " " + employee.getSurnames());
+                System.out.println("Employee ID: " + employee.getId() + " Captain: " + employee.getName() + " " + employee.getSurnames());
             }
             if(employee instanceof Sailor) {
-                System.out.println("Sailor: " + employee.getId() + " " + employee.getName() + " " + employee.getSurnames());
+                System.out.println("Employee ID: " + employee.getId() + " Sailor: " + employee.getName() + " " + employee.getSurnames());
             }
             if(employee instanceof FleetManager) {
-                System.out.println("FleetManager: " + employee.getId() + " " + employee.getName() + " " + employee.getSurnames());
+                System.out.println("Employee ID: " + employee.getId() + " Fleet Manager " + employee.getName() + " " + employee.getSurnames());
             }
         }
     }
@@ -240,24 +240,43 @@ public class EmployeeManagement {
             if(infoEmployee instanceof Sailor) {
                 Sailor sailorInfo = (Sailor) infoEmployee;
                 System.out.println("Sailor Info");
-                System.out.println(sailorInfo.getId() + " " + sailorInfo.getName() + " " + sailorInfo.getSurnames()
-                        + " Contracted: " + sailorInfo.getContractStartDate() + " Salary: " + sailorInfo.getSalary()
-                        + " Years of Experience " + sailorInfo.getExperience()
-                        + "\nIs assigned to " + sailorInfo.getAssignedBoat().getId()
-                        + " " + sailorInfo.getAssignedBoat().getName() + " This month has traveled "
-                        + sailorInfo.getMonthDistance() + "Km and made " + sailorInfo.getTrips());
+                System.out.println("ID: " +  sailorInfo.getId());
+                System.out.println("Full name: " + sailorInfo.getName() + " " +  sailorInfo.getSurnames());
+                System.out.println("Contracted: " +  sailorInfo.getContractStartDate());
+                System.out.println("Salary: " +  sailorInfo.getSalary());
+                System.out.println("Years of experience: " + sailorInfo.getExperience());
+                if(sailorInfo.getAssignedBoat() != null) {
+                    System.out.println("Is assigned to boat ID: " + sailorInfo.getAssignedBoat().getId() + " Named: " + sailorInfo.getAssignedBoat().getName());
+                }
+                else{
+                    System.out.println("The current Sailor is no assigned to a ship");
+                }
+                System.out.println("This month has traveled: " + sailorInfo.getMonthDistance() + "Km and made " + sailorInfo.getTrips() + " trips");
             }
             if(infoEmployee instanceof Captain) {
                 Captain captainInfo = (Captain) infoEmployee;
                 System.out.println("Captain Info");
-                System.out.println(captainInfo.getId() + " " + captainInfo.getName() + " " + captainInfo.getSurnames() +
-                        " " + captainInfo.getContractStartDate() + " " + captainInfo.getSalary() + " " + captainInfo.getExperience());
+                System.out.println("ID: " +  captainInfo.getId());
+                System.out.println("Full name: " + captainInfo.getName() + " " +  captainInfo.getSurnames());
+                System.out.println("Contracted: " +  captainInfo.getContractStartDate());
+                System.out.println("Salary: " +  captainInfo.getSalary());
+                System.out.println("Years of experience: " + captainInfo.getExperience());
+                if(captainInfo.getAssignedBoat() != null) {
+                    System.out.println("Is assigned to boat ID: " + captainInfo.getAssignedBoat().getId() + " Named: " + captainInfo.getAssignedBoat().getName());
+                }
+                else{
+                    System.out.println("The current Captain is not assigned to a ship");
+                }
+                System.out.println("This month has traveled: " + captainInfo.getMonthDistance() + "Km and made " + captainInfo.getTrips() + " trips");
             }
             if(infoEmployee instanceof FleetManager) {
                 FleetManager fleetManagerInfo = (FleetManager) infoEmployee;
                 System.out.println("Fleet Manager Info");
-                System.out.println(fleetManagerInfo.getId() + " " + fleetManagerInfo.getName() + " " + fleetManagerInfo.getSurnames() +
-                        " " + fleetManagerInfo.getContractStartDate() + " " + fleetManagerInfo.getSalary() + " " + fleetManagerInfo.getExperience());
+                System.out.println("ID: " +  fleetManagerInfo.getId());
+                System.out.println("Full name: " + fleetManagerInfo.getName() + " " +  fleetManagerInfo.getSurnames());
+                System.out.println("Contracted: " +  fleetManagerInfo.getContractStartDate());
+                System.out.println("Salary: " +  fleetManagerInfo.getSalary());
+                System.out.println("Years of experience: " + fleetManagerInfo.getExperience());
                 if(!fleetManagerInfo.getManagedBoats().isEmpty()) {
                     System.out.println("Is managing the current Fleet");
                     for (Boat b : fleetManagerInfo.getManagedBoats()) {
@@ -265,7 +284,7 @@ public class EmployeeManagement {
                     }
                 }
                 else{
-                    System.out.println("The Fleet Manager is currently no managin any ship");
+                    System.out.println("The selected Fleet Manager is not managing any ship");
                 }
             }
         }

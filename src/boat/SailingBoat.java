@@ -66,4 +66,9 @@ public class SailingBoat extends Boat{
         boats.add(newSailing);
         System.out.println("Sailing Boat added to the fleet!");
     }
+
+    @Override
+    public void setSail(double distance){
+
+    }
 }
