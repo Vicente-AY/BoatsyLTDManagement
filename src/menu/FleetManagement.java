@@ -178,9 +178,10 @@ public class FleetManagement {
                 }
             }
             System.out.println("Operation successfull");
-            System.out.println("Boat with ID: " + boatToAssign.getId() + " Named: " + boatToAssign + " Crewed with " + boatToAssign.getCrew().size() + "/" + boatToAssign.getMaxCrew() + " Sailors");
-            System.out.println("Captain Assigned: " + boatToAssign.getCaptain());
-            System.out.println("Fleet Manager Assigned: " + boatToAssign.getAssignedFM());
+            System.out.println("Boat with ID: " + boatToAssign.getId() + " Named: " + boatToAssign.getName());
+            System.out.println(" Crewed with " + boatToAssign.getCrew().size() + "/" + boatToAssign.getMaxCrew() + " Sailors");
+            System.out.println("Captain Assigned: " + boatToAssign.getCaptain().getName() + " " + boatToAssign.getCaptain().getSurnames());
+            System.out.println("Fleet Manager Assigned: " + boatToAssign.getAssignedFM().getName() + " " + boatToAssign.getAssignedFM().getSurnames());
         }
         else{
             System.out.println("ID not bound");
@@ -218,8 +219,8 @@ public class FleetManagement {
             if(!boatUnassign.getCrew().isEmpty()) {
                 for (Sailor sailor : boatUnassign.getCrew()) {
                     sailor.setAssignedBoat(null);
-                    boatUnassign.getCrew().remove(sailor);
                 }
+                boatUnassign.getCrew().clear();
             }
         }
     }
@@ -255,9 +256,18 @@ public class FleetManagement {
                     System.out.println("Ship waiting orders");
                 }
                 System.out.println("Current Crew: " + motorBoat.getCrew().size() + "/" +  motorBoat.getMaxCrew());
-                System.out.println("Assigned Captain: " + motorBoat.getCaptain().getName() + " " + motorBoat.getCaptain().getSurnames());
-                System.out.println("Assigned Fleet Manager: " + motorBoat.getAssignedFM().getName() + " " + motorBoat.getAssignedFM().getSurnames());
-
+                if(motorBoat.getCaptain() != null) {
+                    System.out.println("Assigned Captain: " + motorBoat.getCaptain().getName() + " " + motorBoat.getCaptain().getSurnames());
+                }
+                else{
+                    System.out.println("The Ship do not have an assigned Captain yet");
+                }
+                if(motorBoat.getAssignedFM() != null) {
+                    System.out.println("Assigned Fleet Manager: " + motorBoat.getAssignedFM().getName() + " " + motorBoat.getAssignedFM().getSurnames());
+                }
+                else{
+                    System.out.println("The Ship do not have an assigned Fleet Manager yet");
+                }
             }
             if(boatInfo instanceof SailingBoat){
                 SailingBoat sailingBoat = (SailingBoat) boatInfo;
@@ -276,9 +286,18 @@ public class FleetManagement {
                     System.out.println("Ship waiting orders");
                 }
                 System.out.println("Current Crew: " + sailingBoat.getCrew().size() + "/" +  sailingBoat.getMaxCrew());
-                System.out.println("Assigned Captain: " + sailingBoat.getCaptain().getName() + " " + sailingBoat.getCaptain().getSurnames());
-                System.out.println("Assigned Fleet Manager: " + sailingBoat.getAssignedFM().getName() + " " + sailingBoat.getAssignedFM().getSurnames());
-
+                if(sailingBoat.getCaptain() != null) {
+                    System.out.println("Assigned Captain: " + sailingBoat.getCaptain().getName() + " " + sailingBoat.getCaptain().getSurnames());
+                }
+                else{
+                    System.out.println("Ship do not have an assigned Captain yet");
+                }
+                if(sailingBoat.getAssignedFM() != null) {
+                    System.out.println("Assigned Fleet Manager: " + sailingBoat.getAssignedFM().getName() + " " + sailingBoat.getAssignedFM().getSurnames());
+                }
+                else{
+                    System.out.println("Ship do not have an assigned FM yet");
+                }
             }
             if(boatInfo instanceof CargoShip){
                 CargoShip cargoShip = (CargoShip) boatInfo;
@@ -297,9 +316,18 @@ public class FleetManagement {
                     System.out.println("Ship waiting orders");
                 }
                 System.out.println("Current Crew: " + cargoShip.getCrew().size() + "/" +  cargoShip.getMaxCrew());
-                System.out.println("Assigned Captain: " + cargoShip.getCaptain().getName() + " " + cargoShip.getCaptain().getSurnames());
-                System.out.println("Assigned Fleet Manager: " + cargoShip.getAssignedFM().getName() + " " + cargoShip.getAssignedFM().getSurnames());
-
+                if(cargoShip.getCaptain() != null) {
+                    System.out.println("Assigned Captain: " + cargoShip.getCaptain().getName() + " " + cargoShip.getCaptain().getSurnames());
+                }
+                else{
+                    System.out.println("The ship do not have an assigned Captain yet");
+                }
+                if(cargoShip.getCaptain() != null) {
+                    System.out.println("Assigned Fleet Manager: " + cargoShip.getAssignedFM().getName() + " " + cargoShip.getAssignedFM().getSurnames());
+                }
+                else{
+                    System.out.println("The ship do not have an assigned Fleet Manager yet");
+                }
 
             }
 
