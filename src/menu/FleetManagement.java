@@ -18,7 +18,7 @@ public class FleetManagement {
         while(true) {
             System.out.println("- - - Fleet Management Menu - - -");
             System.out.println("1. Add Ship | 2. Remove Ship | 3. Assign Crew Automatically");
-            System.out.println("4. Ship Info | 5. Back");
+            System.out.println("4. Unassign Crew | 5. Ship Info | 6. Back");
             option = input.nextInt();
             input.nextLine();
             switch (option) {
@@ -32,8 +32,13 @@ public class FleetManagement {
                     assignCrew(boats, employees);
                     break;
                 case 4:
-                    shipInfo(boats);
+                    unassignCrew(boats);
+                    break;
                 case 5:
+                    shipInfo(boats);
+                    break;
+
+                case 6:
                     System.out.println("Back to Main Manu");
                     return;
                 default:
@@ -86,6 +91,10 @@ public class FleetManagement {
             }
         }
         if(boatToRemove != null) {
+            if(boatToRemove.getCurrentDistanceLeft() > 0){
+                System.out.println("Sorry, the ship is on duty. Wait until arrival before deleting it");
+                return;
+            }
             if (boatToRemove.getAssignedFM() != null || boatToRemove.getCaptain() != null || boatToRemove.getCrew().size() > 0) {
                 System.out.println("Sorry, the ship as already personal on board. Remove them first before deleting the ship");
                 return;
@@ -125,26 +134,93 @@ public class FleetManagement {
                 boatToAssign = boat;
             }
         }
-        if(boatToAssign.getCrew().size() >= boatToAssign.getMaxCrew()){
-            System.out.println("The boat is fully crew");
-            return;
-        }
+
         if(boatToAssign != null) {
+
+            if(boatToAssign.getCurrentDistanceLeft() > 0){
+                System.out.println("Sorry, the ship is on duty. Wait until arrival");
+                return;
+            }
+
             for(Employee employee : employees){
+
+                if(boatToAssign.getCrew().size() >= boatToAssign.getMaxCrew() && boatToAssign.getCaptain() != null && boatToAssign.getAssignedFM() != null){
+                    System.out.println("The boat is fully crew");
+                    return;
+                }
+
                 if(employee instanceof Sailor){
                     Sailor sailorToAssign = (Sailor) employee;
                     if(sailorToAssign.getAssignedBoat() == null){
                         boatToAssign.getCrew().add(sailorToAssign);
                         sailorToAssign.setAssignedBoat(boatToAssign);
-                        if(boatToAssign.getCrew().size() >= boatToAssign.getMaxCrew()){
-                            break;
+                    }
+                }
+                if(employee instanceof Captain) {
+                    Captain captainToAssign = (Captain) employee;
+                    if (captainToAssign.getAssignedBoat() == null && boatToAssign.getCaptain() == null) {
+                        boatToAssign.setCaptain((Captain) employee);
+                        ((Captain) employee).setAssignedBoat(boatToAssign);
+                    }
+                }
+                if(employee instanceof FleetManager){
+                    FleetManager  fleetManagerToAssign = (FleetManager) employee;
+                    Boolean managinBoat = false;
+                    for(Boat b : fleetManagerToAssign.getManagedBoats()){
+                        if(b.getId() == boatToAssign.getId()){
+                            managinBoat = true;
                         }
+                    }
+                    if(boatToAssign.getAssignedFM() == null && fleetManagerToAssign.getManagedBoats().size() < 5 && !managinBoat){
+                        boatToAssign.setAssignedFM(fleetManagerToAssign);
+                        fleetManagerToAssign.getManagedBoats().add(boatToAssign);
                     }
                 }
             }
+            System.out.println("Operation successfull");
+            System.out.println("Boat with ID: " + boatToAssign.getId() + " Named: " + boatToAssign + " Crewed with " + boatToAssign.getCrew().size() + "/" + boatToAssign.getMaxCrew() + " Sailors");
+            System.out.println("Captain Assigned: " + boatToAssign.getCaptain());
+            System.out.println("Fleet Manager Assigned: " + boatToAssign.getAssignedFM());
         }
         else{
             System.out.println("ID not bound");
+        }
+    }
+
+    public void unassignCrew(ArrayList<Boat> boats){
+
+        Boat boatUnassign = null;
+
+        System.out.println("Type the ID of the Ship you want to Unassign Personal");
+        int id =  input.nextInt();
+        input.nextLine();
+        for(Boat boat : boats){
+            if(boat.getId() == id){
+                boatUnassign = boat;
+            }
+        }
+
+        if(boatUnassign != null) {
+
+            if(boatUnassign.getCurrentDistanceLeft() > 0){
+                System.out.println("The ship is no Duty. Wait until arrival");
+                return;
+            }
+
+            if(boatUnassign.getCaptain() != null){
+                boatUnassign.getCaptain().setAssignedBoat(null);
+                boatUnassign.setCaptain(null);
+            }
+            if(boatUnassign.getAssignedFM() != null){
+                boatUnassign.getAssignedFM().getManagedBoats().remove(boatUnassign);
+                boatUnassign.setAssignedFM(null);
+            }
+            if(!boatUnassign.getCrew().isEmpty()) {
+                for (Sailor sailor : boatUnassign.getCrew()) {
+                    sailor.setAssignedBoat(null);
+                    boatUnassign.getCrew().remove(sailor);
+                }
+            }
         }
     }
 
@@ -152,7 +228,7 @@ public class FleetManagement {
 
         Boat boatInfo = null;
 
-        System.out.println("Type the ID of the Ship you want to Info");
+        System.out.println("Type the ID of the Ship you want Info about");
         int id =  input.nextInt();
         input.nextLine();
         for(Boat boat : boats){
