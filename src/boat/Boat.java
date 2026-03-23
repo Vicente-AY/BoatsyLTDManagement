@@ -4,13 +4,15 @@ import employee.Captain;
 import employee.FleetManager;
 import employee.Sailor;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-public abstract class Boat {
+public abstract class Boat implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     int id = 0;
     String name = "";
     double weight = 0.0;

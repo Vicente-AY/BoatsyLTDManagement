@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class SailingBoat extends Boat{
 
+    private static final long serialVersionUID = 1L;
     int sails = 0;
     int maxPassengers = 0;
     int currentPassengers = 0;

@@ -2,11 +2,13 @@ package employee;
 
 import boat.Boat;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public abstract class Employee {
+public abstract class Employee implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     int id = 0;
     String name = "";
     String surnames = "";

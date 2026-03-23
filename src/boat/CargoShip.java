@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class CargoShip extends Boat {
 
+    private static final long serialVersionUID = 1L;
     double maxCargo;
     double currentCargo = 0.0;
     Engine engine;

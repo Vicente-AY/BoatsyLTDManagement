@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class Captain extends Employee{
 
+    private static final long serialVersionUID = 1L;
     int trips = 0;
     double bonus = 0;
     double monthDistance = 0;

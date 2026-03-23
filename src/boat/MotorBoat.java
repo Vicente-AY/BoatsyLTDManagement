@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class MotorBoat extends Boat{
 
+    private static final long serialVersionUID = 1L;
     Engine engine = null;
     int currentPassengers = 0;
     int maxPassengers = 0;

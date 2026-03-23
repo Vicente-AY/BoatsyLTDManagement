@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class FleetManager extends Employee {
 
+    private static final long serialVersionUID = 1L;
     ArrayList<Boat> managedBoats = new ArrayList<Boat>();
 
     public FleetManager(int id, String name, String surnames, LocalDate contractStartDate, double salary, int experience){
