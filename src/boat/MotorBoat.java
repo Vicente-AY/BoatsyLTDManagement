@@ -2,6 +2,7 @@ package boat;
 
 import utils.Engine;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -90,9 +91,80 @@ public class MotorBoat extends Boat{
         System.out.println("Motor Boat added to the fleet!");
     }
 
+    public void load(int passengers){
+
+        if(passengers > 0){
+            if(passengers > this.maxPassengers || passengers + this.currentPassengers > this.maxPassengers){
+                System.out.println("Not enough sets");
+            }
+            else{
+                this.currentPassengers += passengers;
+            }
+        }
+        else{
+            System.out.println("Invalid option");
+        }
+    }
+
+    @Override
+    public void unload(){
+        this.currentPassengers = 0;
+    }
+
     @Override
     public void setSail(double distance){
 
+        if(!canSail(distance)){
+            return;
+        }
+
+        if(this.currentPassengers < this.maxPassengers){
+            if(!confirmDeparture()){
+                System.out.println("Operation cancelled");
+                return;
+            }
+        }
+        System.out.println("Setting course");
+        long minutes = (long) (distance / this.maxVelocity);
+        this.sailDate = LocalDateTime.now();
+        this.lastChecked = this.sailDate;
+        this.dateOfArrival = this.sailDate.plusMinutes(minutes);
+        this.currentDistanceLeft = distance;
+    }
+
+    public boolean canSail(double distance){
+
+        if(distance > this.maxDistance){
+            System.out.println("Sail out of bounds!");
+            return false;
+        }
+        if(this.captain == null){
+            System.out.println("The captain has not been set!");
+            return false;
+        }
+        if(this.assignedFM == null){
+            System.out.println("The Fleet Manager has not been set!");
+            return false;
+        }
+        if(this.crew.size() < (this.maxCrew / 2)){
+            System.out.println("Not enough crew!");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean confirmDeparture(){
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("Warning! The ship is not full of passengers (" + this.currentPassengers + "/" + this.maxPassengers + ")");
+        System.out.println("Are you sure do you want to set sail? (Y/N)");
+        String option = input.nextLine();
+        if(option.equalsIgnoreCase("y") || option.equalsIgnoreCase("yes")){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public Engine getEngine() {

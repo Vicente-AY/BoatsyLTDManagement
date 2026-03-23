@@ -91,22 +91,20 @@ public class CargoShip extends Boat {
         System.out.println("Cargo Ship added to the fleet!");
     }
 
-    public void loadCargo(double cargo){
-
-        Scanner input = new Scanner(System.in);
+    public void load(double cargo){
 
         if(cargo > maxCargo || cargo + this.currentCargo > maxCargo){
-            System.out.println("Not enough cargo");
+            System.out.println("Not enough cargo capacity");
         }
         else{
-            this.currentCargo = cargo;
+            this.currentCargo += cargo;
             System.out.println("Cargo loaded!");
         }
     }
 
-    public void unloadCargo(){
+    @Override
+    public void unload(){
         this.currentCargo = 0.0;
-        System.out.println("Cargo unloaded!");
     }
 
     @Override
@@ -119,15 +117,14 @@ public class CargoShip extends Boat {
         if(this.currentCargo < this.maxCargo){
             if(!confirmDeparture()){
                 System.out.println("Operation cancelled");
+                return;
             }
         }
         System.out.println("Setting course");
-        long minutes = (long) ((distance / this.maxVelocity) *10);
-        double hours = (double) minutes / 60;
-        System.out.println(hours  + " hours until arrival");
+        long minutes = (long) (distance / this.maxVelocity);
         this.sailDate = LocalDateTime.now();
         this.lastChecked = this.sailDate;
-        this.dateOfArrival = this.sailDate.plusHours(minutes);
+        this.dateOfArrival = this.sailDate.plusMinutes(minutes);
         this.currentDistanceLeft = distance;
     }
 

@@ -38,18 +38,47 @@ public abstract class Boat implements Serializable {
         this.maxCrew = maxCrew;
     }
 
-    public abstract void setSail(double distnace);
+    public abstract void setSail(double distance);
 
-    public void newArrivalDate(Boat boat){
+    public void boatTripStatusUpdate(ArrayList<Boat> boats){
 
         LocalDateTime currentDate = LocalDateTime.now();
-        double diffHours = ChronoUnit.HOURS.between(this.lastChecked, currentDate);
-        if(diffHours > 0) {
-            double coveredDistance = diffHours * this.maxVelocity;
-            this.currentDistanceLeft -= coveredDistance;
-            this.lastChecked = currentDate;
+        double potentialCoveredDistance = 0;
+
+        for(Boat boat : boats){
+            double currentDist = boat.getCurrentDistanceLeft();
+            double actualCovered = 0;
+
+            if(currentDist > 0){
+                double diffMinutes = ChronoUnit.MINUTES.between(this.lastChecked, currentDate);
+                if(diffMinutes > 0) {
+                    potentialCoveredDistance = (diffMinutes * 60) * this.maxVelocity;
+
+                    actualCovered = Math.min(potentialCoveredDistance, currentDist);
+
+                    this.currentDistanceLeft = currentDist - actualCovered;
+                    this.lastChecked = currentDate;
+
+                    if(this.currentDistanceLeft <= 0){
+                        this.currentDistanceLeft = 0;
+                        boat.unload();
+                        boat.getCaptain().setTrips(boat.getCaptain().getTrips() + 1);
+                        for(Sailor sailor : boat.getCrew()){
+                            sailor.setTrips(sailor.getTrips() + 1);
+                        }
+                    }
+                }
+            }
+            if(actualCovered > 0) {
+                boat.getCaptain().setMonthDistance(boat.getCaptain().getMonthDistance() + actualCovered);
+                for (Sailor sailor : boat.getCrew()) {
+                    sailor.setMonthDistance(sailor.getMonthDistance() + actualCovered);
+                }
+            }
         }
     }
+
+    public abstract void unload();
 
     //Getters and Setters
     public int getId() {
