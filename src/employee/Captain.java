@@ -13,9 +13,8 @@ public class Captain extends Employee{
     double monthDistance = 0;
     Boat assignedBoat = null;
 
-    public Captain(int id, String name, String surnames, LocalDate contractStartDate, double salary, int experience, double bonus){
+    public Captain(int id, String name, String surnames, LocalDate contractStartDate, double salary, int experience){
         super(id, name, surnames, contractStartDate, salary, experience);
-        this.bonus = bonus;
     }
 
     public static void createCaptain(ArrayList<Employee> employees){
@@ -46,9 +45,7 @@ public class Captain extends Employee{
         int experience = input.nextInt();
         input.nextLine();
 
-        double bonus = 0;
-
-        Captain newCaptain = new Captain(id, name, surnames, contractStartDate, salary, experience, bonus);
+        Captain newCaptain = new Captain(id, name, surnames, contractStartDate, salary, experience);
         employees.add(newCaptain);
         System.out.println("New Captain with ID: " + newCaptain.getId() + " named: " + newCaptain.getName() + " " + newCaptain.getSurnames() + " created Successfully");
     }

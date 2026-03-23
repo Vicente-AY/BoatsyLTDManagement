@@ -13,9 +13,8 @@ public class Sailor extends Employee {
     double monthDistance = 0;
     Boat assignedBoat = null;
 
-    public Sailor(int id, String name, String surnames, LocalDate contractStartDate, double salary, int experience, double bonus) {
+    public Sailor(int id, String name, String surnames, LocalDate contractStartDate, double salary, int experience) {
         super(id, name, surnames, contractStartDate, salary, experience);
-        this.bonus = bonus;
     }
 
     public static void createSailor(ArrayList<Employee> employees) {
@@ -48,9 +47,7 @@ public class Sailor extends Employee {
         int experience = input.nextInt();
         input.nextLine();
 
-        double bonus = 0;
-
-        Sailor newSailor = new Sailor(id, name, surnames, contractStartDate, salary, experience, bonus);
+        Sailor newSailor = new Sailor(id, name, surnames, contractStartDate, salary, experience);
         employees.add(newSailor);
         System.out.println("New Sailor with ID: " + newSailor.getId() + " Named: " + newSailor.getName() + " " + newSailor.getSurnames() + " created Successfully");
     }

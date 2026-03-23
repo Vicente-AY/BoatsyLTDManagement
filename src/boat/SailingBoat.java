@@ -10,6 +10,7 @@ public class SailingBoat extends Boat{
 
     int sails = 0;
     int maxPassengers = 0;
+    int currentPassengers = 0;
 
     public SailingBoat(int id, String name, double weight, int maxVelocity, int maxDistance, int maxCrew, int sails, int maxPassengers) {
         super(id, name, weight, maxVelocity, maxDistance, maxCrew);
@@ -70,5 +71,15 @@ public class SailingBoat extends Boat{
     @Override
     public void setSail(double distance){
 
+    }
+
+    public int getSails(){
+        return sails;
+    }
+    public int getMaxPassengers(){
+        return maxPassengers;
+    }
+    public int getCurrentPassengers(){
+        return currentPassengers;
     }
 }

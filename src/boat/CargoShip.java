@@ -163,6 +163,16 @@ public class CargoShip extends Boat {
         else{
             return false;
         }
+    }
 
+    public Engine getEngine(){
+        return engine;
+    }
+
+    public double getCurrentCargo(){
+        return currentCargo;
+    }
+    public double getMaxCargo(){
+        return maxCargo;
     }
 }

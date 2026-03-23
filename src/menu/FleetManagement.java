@@ -1,6 +1,7 @@
 package menu;
 
 import boat.*;
+import com.sun.security.jgss.GSSUtil;
 import employee.*;
 
 import java.util.ArrayList;
@@ -16,8 +17,8 @@ public class FleetManagement {
 
         while(true) {
             System.out.println("- - - Fleet Management Menu - - -");
-            System.out.println("1. Add Boat | 2. Remove Boat | 3. Assign Crew Automatically");
-            System.out.println("4. Back");
+            System.out.println("1. Add Ship | 2. Remove Ship | 3. Assign Crew Automatically");
+            System.out.println("4. Ship Info | 5. Back");
             option = input.nextInt();
             input.nextLine();
             switch (option) {
@@ -31,6 +32,8 @@ public class FleetManagement {
                     assignCrew(boats, employees);
                     break;
                 case 4:
+                    shipInfo(boats);
+                case 5:
                     System.out.println("Back to Main Manu");
                     return;
                 default:
@@ -60,7 +63,7 @@ public class FleetManagement {
                 case 3:
                     SailingBoat.createSailingBoat(boats);
                     break;
-                case 4:
+                case 5:
                     System.out.println("Back to the Manage Fleet Menu");
                     return;
                 default:
@@ -83,6 +86,10 @@ public class FleetManagement {
             }
         }
         if(boatToRemove != null) {
+            if (boatToRemove.getAssignedFM() != null || boatToRemove.getCaptain() != null || boatToRemove.getCrew().size() > 0) {
+                System.out.println("Sorry, the ship as already personal on board. Remove them first before deleting the ship");
+                return;
+            }
             if (boatToRemove instanceof CargoShip) {
                 System.out.println("Are you sure you want to remove Cargo Ship " + boatToRemove.getId() + " " + boatToRemove.getName() + "?");
             }
@@ -102,7 +109,7 @@ public class FleetManagement {
             }
         }
         else{
-            System.out.println("ID not bound");
+            System.out.println("Ship ID not found");
         }
     }
 
@@ -141,5 +148,85 @@ public class FleetManagement {
         }
     }
 
+    public void shipInfo(ArrayList<Boat> boats){
 
+        Boat boatInfo = null;
+
+        System.out.println("Type the ID of the Ship you want to Info");
+        int id =  input.nextInt();
+        input.nextLine();
+        for(Boat boat : boats){
+            if(boat.getId() == id){
+                boatInfo = boat;
+            }
+        }
+
+        if(boatInfo != null){
+            if(boatInfo instanceof MotorBoat){
+                MotorBoat motorBoat = (MotorBoat) boatInfo;
+                System.out.println("Ship Class: Motor Boat");
+                System.out.println("ID: " + motorBoat.getId());
+                System.out.println("Name: " + motorBoat.getName());
+                System.out.println("Weight: " + motorBoat.getWeight());
+                System.out.println("Max Velocity: " + motorBoat.getMaxVelocity());
+                System.out.println("MaxDistance: " + motorBoat.getMaxDistance());
+                System.out.println("Engine type: " + motorBoat.getEngine());
+                System.out.println("Current Passengers: " + motorBoat.getCurrentPassengers() + "/" + motorBoat.getMaxPassengers());
+                if(motorBoat.getCurrentDistanceLeft() > 0){
+                    System.out.println("Ship on Duty. Distance Lef until arrival: " + motorBoat.getCurrentDistanceLeft());
+                }
+                else{
+                    System.out.println("Ship waiting orders");
+                }
+                System.out.println("Current Crew: " + motorBoat.getCrew().size() + "/" +  motorBoat.getMaxCrew());
+                System.out.println("Assigned Captain: " + motorBoat.getCaptain().getName() + " " + motorBoat.getCaptain().getSurnames());
+                System.out.println("Assigned Fleet Manager: " + motorBoat.getAssignedFM().getName() + " " + motorBoat.getAssignedFM().getSurnames());
+
+            }
+            if(boatInfo instanceof SailingBoat){
+                SailingBoat sailingBoat = (SailingBoat) boatInfo;
+                System.out.println("Ship Class: Sailing Boat");
+                System.out.println("ID: " + sailingBoat.getId());
+                System.out.println("Name: " + sailingBoat.getName());
+                System.out.println("Weight: " + sailingBoat.getWeight());
+                System.out.println("Max Velocity: " + sailingBoat.getMaxVelocity());
+                System.out.println("MaxDistance: " + sailingBoat.getMaxDistance());
+                System.out.println("Number of Sails: " + sailingBoat.getSails());
+                System.out.println("Current Passengers: " + sailingBoat.getCurrentPassengers() + "/" + sailingBoat.getMaxPassengers());
+                if(sailingBoat.getCurrentDistanceLeft() > 0){
+                    System.out.println("Ship on Duty. Distance Lef until arrival: " + sailingBoat.getCurrentDistanceLeft());
+                }
+                else{
+                    System.out.println("Ship waiting orders");
+                }
+                System.out.println("Current Crew: " + sailingBoat.getCrew().size() + "/" +  sailingBoat.getMaxCrew());
+                System.out.println("Assigned Captain: " + sailingBoat.getCaptain().getName() + " " + sailingBoat.getCaptain().getSurnames());
+                System.out.println("Assigned Fleet Manager: " + sailingBoat.getAssignedFM().getName() + " " + sailingBoat.getAssignedFM().getSurnames());
+
+            }
+            if(boatInfo instanceof CargoShip){
+                CargoShip cargoShip = (CargoShip) boatInfo;
+                System.out.println("Ship Class: Cargo Shio");
+                System.out.println("ID: " + cargoShip.getId());
+                System.out.println("Name: " + cargoShip.getName());
+                System.out.println("Weight: " + cargoShip.getWeight());
+                System.out.println("Max Velocity: " + cargoShip.getMaxVelocity());
+                System.out.println("MaxDistance: " + cargoShip.getMaxDistance());
+                System.out.println("Engine type: " + cargoShip.getEngine());
+                System.out.println("Current Cargo: " + cargoShip.getCurrentCargo() + "/" + cargoShip.getMaxCargo());
+                if(cargoShip.getCurrentDistanceLeft() > 0){
+                    System.out.println("Ship on Duty. Distance Lef until arrival: " + cargoShip.getCurrentDistanceLeft());
+                }
+                else{
+                    System.out.println("Ship waiting orders");
+                }
+                System.out.println("Current Crew: " + cargoShip.getCrew().size() + "/" +  cargoShip.getMaxCrew());
+                System.out.println("Assigned Captain: " + cargoShip.getCaptain().getName() + " " + cargoShip.getCaptain().getSurnames());
+                System.out.println("Assigned Fleet Manager: " + cargoShip.getAssignedFM().getName() + " " + cargoShip.getAssignedFM().getSurnames());
+
+
+            }
+
+        }
+    }
 }

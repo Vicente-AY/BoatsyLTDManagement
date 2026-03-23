@@ -13,8 +13,6 @@ import java.util.Scanner;
 
 public class Menu {
 
-
-
     ArrayList<Boat> boats = new ArrayList<Boat>();
     ArrayList<Employee> employees = new ArrayList<Employee>();
 
@@ -59,8 +57,8 @@ public class Menu {
         boats.add(ship2);
 
 // Captain
-        Captain captain1 = new Captain(1, "Juan", "Pérez López", LocalDate.of(2020, 1, 15), 5000.0, 10, 1000.0);
-        Captain captain2 = new Captain(2, "María", "García Ruiz", LocalDate.of(2018, 6, 10), 5500.0, 12, 1200.0);
+        Captain captain1 = new Captain(1, "Juan", "Pérez López", LocalDate.of(2020, 1, 15), 5000.0, 10);
+        Captain captain2 = new Captain(2, "María", "García Ruiz", LocalDate.of(2018, 6, 10), 5500.0, 12);
 
         employees.add(captain1);
         employees.add(captain2);
@@ -73,8 +71,8 @@ public class Menu {
         employees.add(manager2);
 
 // Sailor
-        Sailor sailor1 = new Sailor(5, "Pedro", "López Fernández", LocalDate.of(2021, 2, 1), 2000.0, 3, 300.0);
-        Sailor sailor2 = new Sailor(6, "Ana", "Torres Navarro", LocalDate.of(2022, 5, 12), 2100.0, 2, 250.0);
+        Sailor sailor1 = new Sailor(5, "Pedro", "López Fernández", LocalDate.of(2021, 2, 1), 2000.0, 3);
+        Sailor sailor2 = new Sailor(6, "Ana", "Torres Navarro", LocalDate.of(2022, 5, 12), 2100.0, 2);
 
         employees.add(sailor1);
         employees.add(sailor2);

@@ -8,7 +8,8 @@ import java.util.Scanner;
 public class MotorBoat extends Boat{
 
     Engine engine = null;
-    int maxPassengers;
+    int currentPassengers = 0;
+    int maxPassengers = 0;
 
     public MotorBoat(int id, String name, double weight, int maxVelocity, int maxDistance, int maxCrew, Engine engine, int maxPassengers) {
 
@@ -91,5 +92,16 @@ public class MotorBoat extends Boat{
     @Override
     public void setSail(double distance){
 
+    }
+
+    public Engine getEngine() {
+        return engine;
+    }
+
+    public int  getMaxPassengers() {
+        return maxPassengers;
+    }
+    public int getCurrentPassengers(){
+        return currentPassengers;
     }
 }
