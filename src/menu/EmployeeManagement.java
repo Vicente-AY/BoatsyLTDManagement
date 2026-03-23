@@ -190,25 +190,27 @@ public class EmployeeManagement {
             }
             if(captain.getAssignedBoat() != null || boatToAssign.getCaptain() != null) {
 
-                if(captain.getAssignedBoat().getCurrentDistanceLeft() >= 0){
+                if(captain.getAssignedBoat() != null && captain.getAssignedBoat().getCurrentDistanceLeft() > 0){
                     System.out.println("Selected Captain is assigned to the Boat with ID: " + captain.getAssignedBoat().getId() + " Named: " + captain.getAssignedBoat().getName() + " which is currently on a trip");
                     System.out.println("Wait until arrival to change Captain");
                     return;
                 }
 
                 if(captain.getAssignedBoat() != null && boatToAssign.getCaptain() != null) {
-                    System.out.println("Caution! Both, selected Captain and Ship has already been assigned.");
-                    System.out.println("Selected Captain is assigned to the Boat with ID: " + captain.getAssignedBoat().getId() + " Named: " + captain.getAssignedBoat().getName());
-                    System.out.println("And selected Ship has Captain with ID: " + boatToAssign.getCaptain().getId() + " Named: " + boatToAssign.getCaptain().getName());
-                    System.out.println("Choose your action");
-                    System.out.println("1. Exchange Captains and Ships | 2. Just assign selected Captain to the selected Boat | 3. Cancel");
-                    int option = input.nextInt();
-                    input.nextLine();
-
-                    Boat boatToExchange = captain.getAssignedBoat();
-                    Captain captainToExchange = boatToAssign.getCaptain();
-
+                    int option = 0;
                     while(true) {
+
+                        System.out.println("Caution! Both, selected Captain and Ship have already been assigned.");
+                        System.out.println("Selected Captain is assigned to the Boat with ID: " + captain.getAssignedBoat().getId() + " Named: " + captain.getAssignedBoat().getName());
+                        System.out.println("And selected Ship has Captain with ID: " + boatToAssign.getCaptain().getId() + " Named: " + boatToAssign.getCaptain().getName());
+                        System.out.println("Choose your action");
+                        System.out.println("1. Exchange Captains and Ships | 2. Just assign selected Captain to the selected Boat | 3. Cancel");
+                        option = input.nextInt();
+                        input.nextLine();
+
+                        Boat boatToExchange = captain.getAssignedBoat();
+                        Captain captainToExchange = boatToAssign.getCaptain();
+
                         switch (option) {
                             case 1:
                                 captain.setAssignedBoat(boatToAssign);
@@ -217,7 +219,7 @@ public class EmployeeManagement {
                                 captainToExchange.setAssignedBoat(boatToExchange);
                                 boatToExchange.setCaptain(captainToExchange);
                                 System.out.println("Exchange Completed");
-                                break;
+                                return;
                             case 2:
                                 boatToAssign.setCaptain(captain);
                                 captain.setAssignedBoat(boatToAssign);
@@ -225,7 +227,7 @@ public class EmployeeManagement {
                                 boatToExchange.setCaptain(null);
                                 captainToExchange.setAssignedBoat(null);
                                 System.out.println("Change Completed");
-                                break;
+                                return;
                             case 3:
                                 System.out.println("Cancelling operation");
                                 return;
@@ -238,7 +240,7 @@ public class EmployeeManagement {
 
                 if (captain.getAssignedBoat() != null) {
                     System.out.println("The Captain is already assigned to the Boat with ID: " + captain.getAssignedBoat().getId() + " Named: " + captain.getAssignedBoat().getName());
-                    if (captain.getAssignedBoat().getCurrentDistanceLeft() >= 0) {
+                    if (captain.getAssignedBoat().getCurrentDistanceLeft() <= 0) {
                         boolean change = changeBoat();
                         if (change) {
                             System.out.println("Changing assigned Ship from " + captain.getAssignedBoat().getName() + " to " + boatToAssign.getName());
