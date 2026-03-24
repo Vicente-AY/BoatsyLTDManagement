@@ -7,6 +7,7 @@ import employee.FleetManager;
 import employee.Sailor;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class EmployeeManagement {
@@ -18,7 +19,8 @@ public class EmployeeManagement {
         while(true) {
             System.out.println("- - - Employee Management Menu - - -");
             System.out.println("1. Add Employee | 2. Remove Employee | 3. Assign Employee to a boat");
-            System.out.println("4. List of Employees | 5. Employee Info | 6. Back");
+            System.out.println("4. Unassign Employee from a Ship | 5. Employee List | 6. Employee Info");
+            System.out.println("7. Back");
             option = input.nextInt();
             switch(option) {
                 case 1:
@@ -31,12 +33,14 @@ public class EmployeeManagement {
                     assignBoat(employees, boats);
                     break;
                 case 4:
+                    unassignBoat(employees);
+                case 5:
                     employeeList(employees);
                     break;
-                case 5:
+                case 6:
                     employeeInfo(employees);
                     break;
-                case 6:
+                case 7:
                     System.out.println("Back to Main Menu");
                     return;
                 default:
@@ -295,6 +299,91 @@ public class EmployeeManagement {
                 boatToAssign.setAssignedFM(fleetManager);
                 System.out.println("Captain " +  fleetManager.getId() + " " + fleetManager.getName() + " " + fleetManager.getSurnames() + " Assigned to " + boatToAssign.getId() + " " + boatToAssign.getName() + " Successfully");
                 return;
+            }
+        }
+    }
+
+    public void unassignBoat(ArrayList<Employee> employees){
+
+        Employee employeeToUnassign = null;
+        Boat boatToUnassign = null;
+
+        System.out.println("Type the ID of the Employee you want to Assign to a boat");
+        int employeeId = input.nextInt();
+        input.nextLine();
+
+        for(Employee e: employees){
+            if(e.getId() == employeeId){
+                employeeToUnassign = e;
+            }
+        }
+        if(employeeToUnassign != null){
+            if(employeeToUnassign instanceof Sailor){
+                Sailor sailor =  (Sailor) employeeToUnassign;
+
+                if(sailor.getAssignedBoat() != null){
+                    if(sailor.getAssignedBoat().getCurrentDistanceLeft() > 0){
+                        System.out.println("The ship is on trip. Wait until arrival to change its staff");
+                    }
+                    else{
+                        sailor.getAssignedBoat().getCrew().remove(sailor);
+                        sailor.setAssignedBoat(null);
+                    }
+                }
+                else{
+                    System.out.println("The Sailor is not assigned to any ship yet");
+                }
+            }
+
+            if(employeeToUnassign instanceof Captain){
+                Captain captain = (Captain) employeeToUnassign;
+
+                if(captain.getAssignedBoat() != null){
+                    if(captain.getAssignedBoat().getCurrentDistanceLeft() > 0){
+                        System.out.println("The ship is on trip. Wait until arrival to change its staff");
+                    }
+                    else{
+                        captain.getAssignedBoat().setCaptain(null);
+                        captain.setAssignedBoat(null);
+                    }
+                }
+                System.out.println("The Captain is not assigned to any ship yet");
+            }
+
+            if(employeeToUnassign instanceof FleetManager){
+                FleetManager fleetManager = (FleetManager) employeeToUnassign;
+
+                if(fleetManager.getManagedBoats().isEmpty()){
+                    System.out.println("The Fleet Manager is not Managing any ship yet");
+                }
+                else{
+                    System.out.println("Select the boat you want to unassign");
+                    for(int i = 0; i < fleetManager.getManagedBoats().size(); i++){
+                        System.out.println("Option " + (i + 1) + ": ID" + fleetManager.getManagedBoats().get(i).getId() + " Name: " + fleetManager.getManagedBoats().get(i).getName() );
+                    }
+                    boolean cont = true;
+                    while(cont) {
+                        try {
+                            int option = input.nextInt();
+                            input.nextLine();
+
+                            boatToUnassign = fleetManager.getManagedBoats().get(option - 1);
+                            cont = false;
+                        } catch (IndexOutOfBoundsException e) {
+                            System.out.println("Invalid option");
+                        } catch (InputMismatchException e) {
+                            System.out.println("Please enter a number");
+                            input.nextLine();
+                        }
+                    }
+                    if(boatToUnassign.getCurrentDistanceLeft() > 0){
+                        System.out.println("The selected ship is on a trip. Wait until arrival to change its staff");
+                    }
+                    else{
+                        boatToUnassign.setAssignedFM(null);
+                        fleetManager.getManagedBoats().remove(boatToUnassign);
+                    }
+                }
             }
         }
     }

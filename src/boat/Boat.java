@@ -5,7 +5,6 @@ import employee.FleetManager;
 import employee.Sailor;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -134,5 +133,11 @@ public abstract class Boat implements Serializable {
     }
     public void setCurrentDistanceLeft(double distance){
         this.currentDistanceLeft = distance;
+    }
+    public LocalDateTime getSailDate(){
+        return sailDate;
+    }
+    public LocalDateTime getDateOfArrival(){
+        return dateOfArrival;
     }
 }
