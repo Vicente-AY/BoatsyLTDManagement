@@ -14,7 +14,7 @@ public class CargoShip extends Boat {
     double currentCargo = 0.0;
     Engine engine;
 
-    public CargoShip(int id, String name, double weight, int maxVelocity, int maxDistance, int maxCrew, double maxCargo, Engine engine) {
+    public CargoShip(int id, String name, double weight, double maxVelocity, double maxDistance, int maxCrew, double maxCargo, Engine engine) {
         super(id, name, weight, maxVelocity, maxDistance, maxCrew);
         this.maxCargo = maxCargo;
         this.engine = engine;
@@ -44,12 +44,12 @@ public class CargoShip extends Boat {
         input.nextLine();
 
         System.out.println("Indicate de max velocity of the ship");
-        int maxVelocity = input.nextInt();
+        double maxVelocity = input.nextDouble();
         input.nextLine();
 
 
         System.out.println("Indicate the maximum distance of the ship");
-        int maxDistance = input.nextInt();
+        double maxDistance = input.nextDouble();
         input.nextLine();
 
         System.out.println("Indicate the maximum crew capacity of the ship");
@@ -98,7 +98,8 @@ public class CargoShip extends Boat {
         }
         else{
             this.currentCargo += cargo;
-            System.out.println("Cargo loaded!");
+            System.out.println("Loaded " + cargo + " tons of cargo");
+            System.out.println("New cargo Status: " + this.currentCargo + "/" + this.maxCargo);
         }
     }
 
@@ -121,7 +122,7 @@ public class CargoShip extends Boat {
             }
         }
         System.out.println("Setting course");
-        long minutes = (long) (distance / this.maxVelocity);
+        long minutes = (long) (distance / (this.maxVelocity / 60));
         this.sailDate = LocalDateTime.now();
         this.lastChecked = this.sailDate;
         this.dateOfArrival = this.sailDate.plusMinutes(minutes);

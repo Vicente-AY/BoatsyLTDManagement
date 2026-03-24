@@ -14,7 +14,7 @@ public class SailingBoat extends Boat{
     int maxPassengers = 0;
     int currentPassengers = 0;
 
-    public SailingBoat(int id, String name, double weight, int maxVelocity, int maxDistance, int maxCrew, int sails, int maxPassengers) {
+    public SailingBoat(int id, String name, double weight, double maxVelocity, double maxDistance, int maxCrew, int sails, int maxPassengers) {
         super(id, name, weight, maxVelocity, maxDistance, maxCrew);
         this.sails = sails;
         this.maxPassengers = maxPassengers;
@@ -77,6 +77,8 @@ public class SailingBoat extends Boat{
                 System.out.println("Not enough seats");
             } else {
                 this.currentPassengers += passengers;
+                System.out.println("Operation successfully. Loaded " + passengers + " passengers");
+                System.out.println("New seat status: " + this.currentPassengers + "/" + this.maxPassengers);
             }
         }
         else{
@@ -103,7 +105,7 @@ public class SailingBoat extends Boat{
             }
         }
         System.out.println("Setting course");
-        long minutes = (long) (distance / this.maxVelocity);
+        long minutes = (long) (distance / (this.maxVelocity / 60));
         this.sailDate = LocalDateTime.now();
         this.lastChecked = this.sailDate;
         this.dateOfArrival = this.sailDate.plusMinutes(minutes);

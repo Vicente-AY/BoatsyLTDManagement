@@ -2,11 +2,11 @@ package menu;
 
 import boat.Boat;
 import boat.CargoShip;
-import employee.Captain;
-import employee.Employee;
-import employee.FleetManager;
-import employee.Sailor;
+import boat.MotorBoat;
+import boat.SailingBoat;
+import employee.*;
 import utils.*;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -20,6 +20,7 @@ public class Menu {
         ArrayList<Boat> boats = dataAccess.chargeBoats();
         ArrayList<Employee> employees = dataAccess.chargeEmployees();
 
+        FleetManagement.boatTripStatusUpdate(boats);
 
         Scanner input = new Scanner(System.in);
 

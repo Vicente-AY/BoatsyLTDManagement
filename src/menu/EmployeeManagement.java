@@ -34,6 +34,7 @@ public class EmployeeManagement {
                     break;
                 case 4:
                     unassignBoat(employees);
+                    break;
                 case 5:
                     employeeList(employees);
                     break;

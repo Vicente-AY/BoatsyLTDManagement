@@ -12,12 +12,13 @@ import java.util.ArrayList;
 public abstract class Boat implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     int id = 0;
     String name = "";
     double weight = 0.0;
-    double maxVelocity = 0;
+    public double maxVelocity = 0;
     double maxDistance = 0;
-    double currentDistanceLeft = 0;
+    public double currentDistanceLeft = 0;
     int maxCrew = 0;
     double hoursUntilArrival = 0;
     ArrayList<Sailor> crew = new ArrayList<Sailor>();
@@ -25,10 +26,10 @@ public abstract class Boat implements Serializable {
     Captain captain = null;
     LocalDateTime sailDate = null;
     LocalDateTime dateOfArrival = null;
-    LocalDateTime lastChecked = null;
+    public LocalDateTime lastChecked = null;
 
 
-    public Boat(int id, String name, double weight, int maxVelocity, int maxDistance, int maxCrew) {
+    public Boat(int id, String name, double weight, double maxVelocity, double maxDistance, int maxCrew) {
         this.id = id;
         this.name = name;
         this.weight = weight;
@@ -39,43 +40,6 @@ public abstract class Boat implements Serializable {
 
     public abstract void setSail(double distance);
 
-    public void boatTripStatusUpdate(ArrayList<Boat> boats){
-
-        LocalDateTime currentDate = LocalDateTime.now();
-        double potentialCoveredDistance = 0;
-
-        for(Boat boat : boats){
-            double currentDist = boat.getCurrentDistanceLeft();
-            double actualCovered = 0;
-
-            if(currentDist > 0){
-                double diffMinutes = ChronoUnit.MINUTES.between(this.lastChecked, currentDate);
-                if(diffMinutes > 0) {
-                    potentialCoveredDistance = (diffMinutes * 60) * this.maxVelocity;
-
-                    actualCovered = Math.min(potentialCoveredDistance, currentDist);
-
-                    this.currentDistanceLeft = currentDist - actualCovered;
-                    this.lastChecked = currentDate;
-
-                    if(this.currentDistanceLeft <= 0){
-                        this.currentDistanceLeft = 0;
-                        boat.unload();
-                        boat.getCaptain().setTrips(boat.getCaptain().getTrips() + 1);
-                        for(Sailor sailor : boat.getCrew()){
-                            sailor.setTrips(sailor.getTrips() + 1);
-                        }
-                    }
-                }
-            }
-            if(actualCovered > 0) {
-                boat.getCaptain().setMonthDistance(boat.getCaptain().getMonthDistance() + actualCovered);
-                for (Sailor sailor : boat.getCrew()) {
-                    sailor.setMonthDistance(sailor.getMonthDistance() + actualCovered);
-                }
-            }
-        }
-    }
 
     public abstract void unload();
 

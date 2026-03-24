@@ -4,11 +4,14 @@ import boat.*;
 import com.sun.security.jgss.GSSUtil;
 import employee.*;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FleetManagement {
 
+    java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss");
     Scanner input = new Scanner(System.in);
 
     public void fleetManagementMenu(ArrayList<Boat> boats, ArrayList<Employee> employees){
@@ -153,14 +156,9 @@ public class FleetManagement {
 
             for(Employee employee : employees){
 
-                if(boatToAssign.getCrew().size() >= boatToAssign.getMaxCrew() && boatToAssign.getCaptain() != null && boatToAssign.getAssignedFM() != null){
-                    System.out.println("The boat is fully crew");
-                    return;
-                }
-
                 if(employee instanceof Sailor){
                     Sailor sailorToAssign = (Sailor) employee;
-                    if(sailorToAssign.getAssignedBoat() == null){
+                    if(sailorToAssign.getAssignedBoat() == null && boatToAssign.getCrew().size() < boatToAssign.getMaxCrew()){
                         boatToAssign.getCrew().add(sailorToAssign);
                         sailorToAssign.setAssignedBoat(boatToAssign);
                     }
@@ -185,10 +183,15 @@ public class FleetManagement {
                         fleetManagerToAssign.getManagedBoats().add(boatToAssign);
                     }
                 }
+                if(boatToAssign.getCaptain() != null &&
+                    boatToAssign.getAssignedFM() != null &&
+                    boatToAssign.getCrew().size() >= boatToAssign.getMaxCrew()){
+                    break;
+                }
             }
             System.out.println("Operation successfull");
             System.out.println("Boat with ID: " + boatToAssign.getId() + " Named: " + boatToAssign.getName());
-            System.out.println(" Crewed with " + boatToAssign.getCrew().size() + "/" + boatToAssign.getMaxCrew() + " Sailors");
+            System.out.println("Crewed with " + boatToAssign.getCrew().size() + "/" + boatToAssign.getMaxCrew() + " Sailors");
             System.out.println("Captain Assigned: " + boatToAssign.getCaptain().getName() + " " + boatToAssign.getCaptain().getSurnames());
             System.out.println("Fleet Manager Assigned: " + boatToAssign.getAssignedFM().getName() + " " + boatToAssign.getAssignedFM().getSurnames());
         }
@@ -213,7 +216,7 @@ public class FleetManagement {
         if(boatUnassign != null) {
 
             if(boatUnassign.getCurrentDistanceLeft() > 0){
-                System.out.println("The ship is no Duty. Wait until arrival");
+                System.out.println("The ship is on Duty. Wait until arrival");
                 return;
             }
 
@@ -374,7 +377,7 @@ public class FleetManagement {
 
         Boat boatToSail = null;
 
-        System.out.println("Type the ID of the ship you want to load");
+        System.out.println("Type the ID of the ship you want to start a trip");
         int id = input.nextInt();
         input.nextLine();
 
@@ -395,6 +398,8 @@ public class FleetManagement {
     public void shipTripStatus(ArrayList<Boat> boats) {
 
         Boat boatTripStatus = null;
+
+        boatTripStatusUpdate(boats);
 
         System.out.println("Type the ID of the ship you want to see its status");
         int id = input.nextInt();
@@ -417,47 +422,85 @@ public class FleetManagement {
 
                     System.out.println("Ship Class: Cargo Ship");
                     System.out.println("ID: " + cargoShip.getId());
-                    System.out.println("Sailing Date: " + cargoShip.getSailDate());
+                    System.out.println("Sailing Date: " + cargoShip.getSailDate().format(formatter));
                     System.out.println("Current Cargo: " + cargoShip.getCurrentCargo() + "/" +  cargoShip.getMaxCargo());
                     System.out.println("Current Velocity: " + cargoShip.getMaxVelocity());
                     System.out.println("Current Crew: " + cargoShip.getCrew().size() + "/" + cargoShip.getMaxCrew());
                     System.out.println("Current Captain: " + cargoShip.getCaptain().getName() + " " + cargoShip.getCaptain().getSurnames());
                     System.out.println("Current Fleet Manager: " + cargoShip.getAssignedFM().getName() + " " + cargoShip.getAssignedFM().getSurnames());
-                    System.out.println("Current Distance left: " + cargoShip.getCurrentDistanceLeft());
-                    System.out.println("Approximate arrival Date: " + cargoShip.getDateOfArrival());
+                    System.out.println("Current Distance left: " + String.format("%.2", cargoShip.getCurrentDistanceLeft()) + "Km");
+                    System.out.println("Approximate arrival Date: " + cargoShip.getDateOfArrival().format(formatter));
                 }
                 if(boatTripStatus instanceof MotorBoat) {
                     MotorBoat motorBoat = (MotorBoat) boatTripStatus;
 
                     System.out.println("Ship Class: Motor Boat");
                     System.out.println("ID: " + motorBoat.getId());
-                    System.out.println("Sailing Date: " + motorBoat.getSailDate());
+                    System.out.println("Sailing Date: " + motorBoat.getSailDate().format(formatter));
                     System.out.println("Passengers aboard: " + motorBoat.getCurrentPassengers() + "/" + motorBoat.getMaxPassengers());
                     System.out.println("Current Velocity: " + motorBoat.getMaxVelocity());
                     System.out.println("Current Crew: " + motorBoat.getCrew().size() + "/" + motorBoat.getMaxCrew());
                     System.out.println("Current Captain: " + motorBoat.getCaptain().getName() + " " + motorBoat.getCaptain().getSurnames());
                     System.out.println("Current Fleet Manager: " + motorBoat.getAssignedFM().getName() + " " + motorBoat.getAssignedFM().getSurnames());
-                    System.out.println("Current Distance left: " + motorBoat.getCurrentDistanceLeft());
-                    System.out.println("Approximate arrival Date: " + motorBoat.getDateOfArrival());
+                    System.out.println("Current Distance left: " + String.format("%.2f", motorBoat.getCurrentDistanceLeft()) + "Km");
+                    System.out.println("Approximate arrival Date: " + motorBoat.getDateOfArrival().format(formatter));
                 }
-                if(boatTripStatus instanceof MotorBoat) {
+                if(boatTripStatus instanceof SailingBoat) {
                     SailingBoat sailingBoat = (SailingBoat) boatTripStatus;
 
                     System.out.println("Ship Class: Sailing Boat");
                     System.out.println("ID: " + sailingBoat.getId());
-                    System.out.println("Sailing Date: " + sailingBoat.getSailDate());
+                    System.out.println("Sailing Date: " + sailingBoat.getSailDate().format(formatter));
                     System.out.println("Passengers aboard: " + sailingBoat.getCurrentPassengers() + "/" + sailingBoat.getMaxPassengers());
                     System.out.println("Current Velocity: " + sailingBoat.getMaxVelocity());
                     System.out.println("Current Crew: " + sailingBoat.getCrew().size() + "/" + sailingBoat.getMaxCrew());
                     System.out.println("Current Captain: " + sailingBoat.getCaptain().getName() + " " + sailingBoat.getCaptain().getSurnames());
                     System.out.println("Current Fleet Manager: " + sailingBoat.getAssignedFM().getName() + " " + sailingBoat.getAssignedFM().getSurnames());
-                    System.out.println("Current Distance left: " + sailingBoat.getCurrentDistanceLeft());
-                    System.out.println("Approximate arrival Date: " + sailingBoat.getDateOfArrival());
+                    System.out.println("Current Distance left: " + String.format("%.2f", sailingBoat.getCurrentDistanceLeft()) + "Km");
+                    System.out.println("Approximate arrival Date: " + sailingBoat.getDateOfArrival().format(formatter));
                 }
             }
         }
         else{
             System.out.println("ID not found");
+        }
+    }
+
+    public static void boatTripStatusUpdate(ArrayList<Boat> boats){
+
+        LocalDateTime currentDate = LocalDateTime.now();
+        double potentialCoveredDistance = 0;
+
+        for(Boat boat : boats){
+            double currentDist = boat.getCurrentDistanceLeft();
+            double actualCovered = 0;
+
+            if(currentDist > 0){
+                double diffMinutes = ChronoUnit.MINUTES.between(boat.lastChecked, currentDate);
+                if(diffMinutes > 0) {
+                    potentialCoveredDistance = (diffMinutes * boat.maxVelocity) / 60;
+
+                    actualCovered = Math.min(potentialCoveredDistance, currentDist);
+
+                    boat.currentDistanceLeft = currentDist - actualCovered;
+                    boat.lastChecked = currentDate;
+
+                    if(boat.currentDistanceLeft <= 0){
+                        boat.currentDistanceLeft = 0;
+                        boat.unload();
+                        boat.getCaptain().setTrips(boat.getCaptain().getTrips() + 1);
+                        for(Sailor sailor : boat.getCrew()){
+                            sailor.setTrips(sailor.getTrips() + 1);
+                        }
+                    }
+                }
+            }
+            if(actualCovered > 0) {
+                boat.getCaptain().setMonthDistance(boat.getCaptain().getMonthDistance() + actualCovered);
+                for (Sailor sailor : boat.getCrew()) {
+                    sailor.setMonthDistance(sailor.getMonthDistance() + actualCovered);
+                }
+            }
         }
     }
 }
