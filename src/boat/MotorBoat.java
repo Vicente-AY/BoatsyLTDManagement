@@ -51,7 +51,7 @@ public class MotorBoat extends Boat{
             System.out.println("Indicate de name of the ship");
             name = input.nextLine();
 
-            if(name == null || name.isEmpty() || name == ""){
+            if(name == null || name.trim().isEmpty()){
                 name = "MotorBoat" + id;
             }
 

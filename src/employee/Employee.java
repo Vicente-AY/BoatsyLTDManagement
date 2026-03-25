@@ -25,8 +25,6 @@ public abstract class Employee implements Serializable {
         this.experience = experience;
     }
 
-    public abstract void calculateSalaryBonus();
-
     //Getters y Setters
 
     public int  getId() {
