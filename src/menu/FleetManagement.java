@@ -1,12 +1,12 @@
 package menu;
 
 import boat.*;
-import com.sun.security.jgss.GSSUtil;
 import employee.*;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class FleetManagement {
@@ -23,8 +23,16 @@ public class FleetManagement {
             System.out.println("1. Add Ship | 2. Remove Ship | 3. Assign Crew Automatically");
             System.out.println("4. Unassign Crew | 5. Ship Info | 6. Load Ship");
             System.out.println("7. Set Sail a Ship | 8. Ship trip Status | 9. Back");
-            option = input.nextInt();
-            input.nextLine();
+            try {
+                option = input.nextInt();
+                input.nextLine();
+            }
+            catch(InputMismatchException e) {
+                input.nextLine();
+                option = 0;
+                System.err.println("Enter valid a Number");
+                continue;
+            }
             switch (option) {
                 case 1:
                     addBoat(boats);
@@ -68,8 +76,16 @@ public class FleetManagement {
             System.out.println("Select the type of Boat you want to add");
             System.out.println("1. Add Cargo Ship | 2. Add Motor Boat | 3. Add Sailing Boat");
             System.out.println("4. Back");
-            option = input.nextInt();
-            input.nextLine();
+            try {
+                option = input.nextInt();
+                input.nextLine();
+            }
+            catch(InputMismatchException e) {
+                input.nextLine();
+                option = 0;
+                System.err.println("Enter valid a Number");
+                continue;
+            }
             switch (option) {
                 case 1:
                     CargoShip.createCargo(boats);
@@ -94,9 +110,16 @@ public class FleetManagement {
 
         Boat boatToRemove = null;
 
+        int id = 0;
         System.out.println("Type the ID of the Boat you want to remove");
-        int id =  input.nextInt();
-        input.nextLine();
+        try {
+            id = input.nextInt();
+            input.nextLine();
+        }
+        catch(InputMismatchException e) {
+            System.err.println("Enter a valid number");
+            return;
+        }
         for(Boat boat : boats){
             if(boat.getId() == id){
                 boatToRemove = boat;
@@ -138,9 +161,16 @@ public class FleetManagement {
 
         Boat boatToAssign = null;
 
+        int id = 0;
         System.out.println("Type the ID of the Boat you want to assign crew");
-        int id =  input.nextInt();
-        input.nextLine();
+        try {
+            id = input.nextInt();
+            input.nextLine();
+        }
+        catch(InputMismatchException e) {
+            System.out.println("Enter a valid Number");
+            return;
+        }
         for(Boat boat : boats){
             if(boat.getId() == id){
                 boatToAssign = boat;
@@ -204,9 +234,16 @@ public class FleetManagement {
 
         Boat boatUnassign = null;
 
+        int id = 0;
         System.out.println("Type the ID of the Ship you want to Unassign Personal");
-        int id =  input.nextInt();
-        input.nextLine();
+        try {
+            id = input.nextInt();
+            input.nextLine();
+        }
+        catch(InputMismatchException e) {
+            System.err.println("Enter a valid Number");
+            return;
+        }
         for(Boat boat : boats){
             if(boat.getId() == id){
                 boatUnassign = boat;
@@ -241,9 +278,16 @@ public class FleetManagement {
 
         Boat boatInfo = null;
 
+        int id = 0;
         System.out.println("Type the ID of the Ship you want Info about");
-        int id = input.nextInt();
-        input.nextLine();
+        try {
+            id = input.nextInt();
+            input.nextLine();
+        }
+        catch(InputMismatchException e) {
+            System.err.println("Enter a valid Number");
+            return;
+        }
         for (Boat boat : boats) {
             if (boat.getId() == id) {
                 boatInfo = boat;
@@ -339,9 +383,16 @@ public class FleetManagement {
 
         Boat boatToLoad = null;
 
+        int id = 0;
         System.out.println("Type the ID of the ship you want to load");
-        int id = input.nextInt();
-        input.nextLine();
+        try {
+            id = input.nextInt();
+            input.nextLine();
+        }
+        catch (InputMismatchException e) {
+            System.out.println("Please enter a valid Number");
+            return;
+        }
 
         for(Boat boat : boats) {
             if(boat.getId() == id) {
@@ -352,15 +403,33 @@ public class FleetManagement {
         if(boatToLoad != null){
             if(boatToLoad instanceof CargoShip) {
                 CargoShip cargoShip = (CargoShip) boatToLoad;
-                System.out.println("Type the amount of tons you want to load");
-                double  tons = input.nextDouble();
-                input.nextLine();
-                cargoShip.load(tons);
+                double tons = 0;
+                boolean cont = true;
+                while (cont) {
+                    System.out.println("Type the amount of tons you want to load");
+                    try {
+                        tons = input.nextDouble();
+                        input.nextLine();
+                        cont = false;
+                    } catch (InputMismatchException e) {
+                        System.err.println("Enter a valid Number");
+                    }
+                    cargoShip.load(tons);
+                }
             }
             else{
-                System.out.println("Type the amount of passengers you want to load");
-                int passengers =  input.nextInt();
-                input.nextLine();
+                int passengers = 0;
+                boolean cont = true;
+                while (cont) {
+                    System.out.println("Type the amount of passengers you want to load");
+                    try {
+                        passengers = input.nextInt();
+                        input.nextLine();
+                        cont = false;
+                    } catch (InputMismatchException e) {
+                        System.err.println("Enter a valid Number");
+                    }
+                }
                 if(boatToLoad instanceof MotorBoat) {
                     MotorBoat motorBoat = (MotorBoat) boatToLoad;
                     motorBoat.load(passengers);
@@ -377,9 +446,15 @@ public class FleetManagement {
 
         Boat boatToSail = null;
 
+        int id = 0;
         System.out.println("Type the ID of the ship you want to start a trip");
-        int id = input.nextInt();
-        input.nextLine();
+        try {
+            id = input.nextInt();
+            input.nextLine();
+        }
+        catch (InputMismatchException e) {
+            System.err.println("Please enter a valid Number");
+        }
 
         for(Boat boat : boats) {
             if(boat.getId() == id) {
@@ -389,8 +464,15 @@ public class FleetManagement {
 
         if(boatToSail != null){
             System.out.println("Type the distance you want the ship to trip");
-            double  distance = input.nextDouble();
-            input.nextLine();
+            double distance = 0;
+            try {
+                distance = input.nextDouble();
+                input.nextLine();
+            }
+            catch (InputMismatchException e) {
+                System.err.println("Please enter a valid Number");
+                return;
+            }
             boatToSail.setSail(distance);
         }
     }
@@ -401,9 +483,16 @@ public class FleetManagement {
 
         boatTripStatusUpdate(boats);
 
+        int id = 0;
         System.out.println("Type the ID of the ship you want to see its status");
-        int id = input.nextInt();
-        input.nextLine();
+        try {
+            id = input.nextInt();
+            input.nextLine();
+        }
+        catch (InputMismatchException e) {
+            System.err.println("Please enter a valid Number");
+            return;
+        }
 
         for(Boat boat : boats) {
             if(boat.getId() == id) {
