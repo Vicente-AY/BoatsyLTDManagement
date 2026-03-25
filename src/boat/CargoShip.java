@@ -124,6 +124,7 @@ public class CargoShip extends Boat {
         }
         catch(Exception e){
             System.err.println("General Error: " + e.getMessage());
+            return;
         }
 
         CargoShip newCargoShip = new CargoShip(id, name, weight, maxVelocity, maxDistance, maxCrew, maxCargo, engine);

@@ -109,6 +109,7 @@ public class SailingBoat extends Boat{
         }
         catch(Exception e){
             System.err.println("General Error: " + e.getMessage());
+            return;
         }
 
         SailingBoat newSailing = new SailingBoat(id, name, weight, maxVelocity, maxDistance, maxCrew, sails, maxPassengers);

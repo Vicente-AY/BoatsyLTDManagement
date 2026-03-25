@@ -129,6 +129,7 @@ public class MotorBoat extends Boat{
         }
         catch(Exception e){
             System.err.println("General Error: " + e.getMessage());
+            return;
         }
 
         MotorBoat newMB = new MotorBoat(id, name, weight, maxVelocity, maxDistance, maxCrew, engine, maxPassengers);
