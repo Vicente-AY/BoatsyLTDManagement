@@ -9,6 +9,7 @@ import utils.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Menu {
@@ -30,8 +31,14 @@ public class Menu {
             System.out.println("Welcome to Boatsy LTD Management");
             System.out.println("Type your option");
             System.out.println("1. Manage Personal. | 2. Manage Fleet | 3. Close application");
-            option = input.nextInt();
-            input.nextLine();
+            try {
+                option = input.nextInt();
+                input.nextLine();
+            }
+            catch(InputMismatchException e){
+                System.err.println("Please enter a valid Number");
+                continue;
+            }
             switch(option){
                 case 1:
                     EmployeeManagement employeeManagement = new EmployeeManagement();
