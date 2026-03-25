@@ -272,6 +272,7 @@ public class FleetManagement {
                 boatUnassign.getCrew().clear();
             }
         }
+        System.out.println("Unassign Operation successful");
     }
 
     public void shipInfo(ArrayList<Boat> boats) {
