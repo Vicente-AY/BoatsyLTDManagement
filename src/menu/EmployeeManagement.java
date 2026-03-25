@@ -498,6 +498,9 @@ public class EmployeeManagement {
                 System.out.println("Full name: " + sailorInfo.getName() + " " +  sailorInfo.getSurnames());
                 System.out.println("Contracted: " +  sailorInfo.getContractStartDate());
                 System.out.println("Salary: " +  sailorInfo.getSalary());
+                System.out.println("Current month accumulated Bonus: " + sailorInfo.getBonus());
+                double totalSalary = sailorInfo.getSalary() +  sailorInfo.getBonus();
+                System.out.println("Total Salary: " + totalSalary);
                 System.out.println("Years of experience: " + sailorInfo.getExperience());
                 if(sailorInfo.getAssignedBoat() != null) {
                     System.out.println("Is assigned to boat ID: " + sailorInfo.getAssignedBoat().getId() + " Named: " + sailorInfo.getAssignedBoat().getName());
@@ -513,15 +516,18 @@ public class EmployeeManagement {
                 System.out.println("ID: " +  captainInfo.getId());
                 System.out.println("Full name: " + captainInfo.getName() + " " +  captainInfo.getSurnames());
                 System.out.println("Contracted: " +  captainInfo.getContractStartDate());
-                System.out.println("Salary: " +  captainInfo.getSalary());
-                System.out.println("Years of experience: " + captainInfo.getExperience());
+                System.out.println("Base Salary: " +  captainInfo.getSalary());
+                System.out.println("Current month accumulated Bonus: " + captainInfo.getBonus());
+                double totalSalary = captainInfo.getSalary() + captainInfo.getBonus();
+                System.out.println("Total Salary: " + totalSalary);
+                System.out.println("Years of Experience: " + captainInfo.getExperience());
                 if(captainInfo.getAssignedBoat() != null) {
-                    System.out.println("Is assigned to boat ID: " + captainInfo.getAssignedBoat().getId() + " Named: " + captainInfo.getAssignedBoat().getName());
+                    System.out.println("Is assigned to Ship ID: " + captainInfo.getAssignedBoat().getId() + " Named: " + captainInfo.getAssignedBoat().getName());
                 }
                 else{
                     System.out.println("The current Captain is not assigned to a ship");
                 }
-                System.out.println("This month has traveled: " + captainInfo.getMonthDistance() + "Km and made " + captainInfo.getTrips() + " trips");
+                System.out.println("This month has traveled: " + captainInfo.getMonthDistance() + "Km and made " + captainInfo.getTrips() + " Trips");
             }
             if(infoEmployee instanceof FleetManager) {
                 FleetManager fleetManagerInfo = (FleetManager) infoEmployee;

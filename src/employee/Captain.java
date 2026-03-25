@@ -5,6 +5,7 @@ import exceptions.EmptyFieldException;
 import exceptions.NegativeNumberException;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class Captain extends Employee{
     double bonus = 0;
     double monthDistance = 0;
     Boat assignedBoat = null;
+    int nextTripsForRise = 100;
+    int lastUpdatedYear = 0;
 
     public Captain(int id, String name, String surnames, LocalDate contractStartDate, double salary, int experience){
         super(id, name, surnames, contractStartDate, salary, experience);
@@ -65,6 +68,8 @@ public class Captain extends Employee{
                 contractStartDate = LocalDate.parse(contractDate, formatter);
             }
 
+
+
             salary = 3500.00;
 
             System.out.println("Indicate the experience of the Captain");
@@ -92,16 +97,34 @@ public class Captain extends Employee{
         }
 
         Captain newCaptain = new Captain(id, name, surnames, contractStartDate, salary, experience);
+        newCaptain.lastUpdatedYear = contractStartDate.getYear();
         employees.add(newCaptain);
         System.out.println("New Captain with ID: " + newCaptain.getId() + " named: " + newCaptain.getName() + " " + newCaptain.getSurnames() + " created Successfully");
     }
 
     public void calculateSalaryBonus(){
 
-        if(this.monthDistance > 5000){
-            this.bonus = monthDistance / 10000;
+        this.bonus = monthDistance / 50;
+    }
+
+    @Override
+    public void updateBaseSalary() {
+
+        LocalDate today = LocalDate.now();
+
+        if(this.trips >= nextTripsForRise){
+            this.salary += 150;
+            this.nextTripsForRise += 100;
+        }
+
+        if(today.getMonth() == this.contractStartDate.getMonth()){
+            if(today.getYear() > this.lastUpdatedYear){
+                this.salary += 75;
+                this.lastUpdatedYear = today.getYear();
+            }
         }
     }
+
 
     //Getters y Setters
 

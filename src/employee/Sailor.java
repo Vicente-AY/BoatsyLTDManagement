@@ -18,6 +18,8 @@ public class Sailor extends Employee {
     double bonus = 0;
     double monthDistance = 0;
     Boat assignedBoat = null;
+    int nextTripsForRise = 100;
+    int lastUpdatedYear = 0;
 
     public Sailor(int id, String name, String surnames, LocalDate contractStartDate, double salary, int experience) {
         super(id, name, surnames, contractStartDate, salary, experience);
@@ -93,16 +95,35 @@ public class Sailor extends Employee {
         }
 
         Sailor newSailor = new Sailor(id, name, surnames, contractStartDate, salary, experience);
+        newSailor.lastUpdatedYear = contractStartDate.getYear();
         employees.add(newSailor);
         System.out.println("New Sailor with ID: " + newSailor.getId() + " Named: " + newSailor.getName() + " " + newSailor.getSurnames() + " created Successfully");
     }
 
-    public void calculateSalaryBonus(){
+    public void calculateBonus(){
 
-        if(this.monthDistance > 5000){
-            this.bonus = monthDistance / 100000;
+        this.bonus = this.monthDistance / 100;
+    }
+
+    @Override
+    public void updateBaseSalary() {
+
+        LocalDate today = LocalDate.now();
+
+        if(this.trips >= nextTripsForRise){
+            this.salary += 150;
+            this.nextTripsForRise += 100;
+        }
+
+        if(today.getMonth() == this.contractStartDate.getMonth()){
+            if(today.getYear() > this.lastUpdatedYear){
+                this.salary += 25;
+                this.lastUpdatedYear = today.getYear();
+            }
         }
     }
+
+    //Getters y Setters
 
     public double getDistance(){
         return monthDistance;
@@ -112,9 +133,8 @@ public class Sailor extends Employee {
         this.monthDistance += distance;
     }
 
-    //Getters y Setters
-
-    public double bounus(){
+    public double getBonus(){
+        this.calculateBonus();
         return bonus;
     }
     public double monthDistance(){

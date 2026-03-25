@@ -25,6 +25,8 @@ public abstract class Employee implements Serializable {
         this.experience = experience;
     }
 
+    public abstract void updateBaseSalary();
+
     //Getters y Setters
 
     public int  getId() {

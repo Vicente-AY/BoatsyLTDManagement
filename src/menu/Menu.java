@@ -8,6 +8,7 @@ import employee.*;
 import utils.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -22,6 +23,15 @@ public class Menu {
         ArrayList<Employee> employees = dataAccess.chargeEmployees();
 
         FleetManagement.boatTripStatusUpdate(boats);
+
+        String lastChecked = dataAccess.chargeLastExecution();
+        LocalDate today = LocalDate.now();
+        String todayString = today.toString();
+        int day = today.getDayOfMonth();
+        if(day == 1 && !todayString.equals(lastChecked)){
+            calculateSalary(todayString, employees);
+        }
+
 
         Scanner input = new Scanner(System.in);
 
@@ -58,5 +68,13 @@ public class Menu {
                     break;
             }
         }
+    }
+
+    public void calculateSalary(String todayString, ArrayList<Employee> employees){
+
+        for(Employee employee : employees){
+            employee.updateBaseSalary();
+        }
+        dataAccess.saveLastExecution(todayString);
     }
 }

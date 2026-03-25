@@ -12,6 +12,7 @@ public class Data {
     ArrayList<Employee> employees = new ArrayList<Employee>();
     File employeeList = new File("employee.dat");
     File boatList = new File("boats.dat");
+    File executionDay = new File("executionDay.txt");
 
     public ArrayList<Employee> chargeEmployees(){
 
@@ -24,6 +25,18 @@ public class Data {
             }
         }
         return employees;
+    }
+
+    public void saveEmployees(ArrayList<Employee> employees){
+
+        try(ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(employeeList))){
+            output.reset();
+            output.writeObject(employees);
+            output.flush();
+        }
+        catch(IOException e){
+            System.err.println("Error saving Employees " + e.getMessage());
+        }
     }
 
     public ArrayList<Boat> chargeBoats(){
@@ -39,18 +52,6 @@ public class Data {
         return boats;
     }
 
-    public void saveEmployees(ArrayList<Employee> employees){
-
-        try(ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(employeeList))){
-            output.reset();
-            output.writeObject(employees);
-            output.flush();
-        }
-        catch(IOException e){
-            System.err.println("Error saving Employees " + e.getMessage());
-        }
-    }
-
     public void saveBoats(ArrayList<Boat> boats){
 
         try(ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(boatList))){
@@ -60,6 +61,28 @@ public class Data {
         }
         catch(IOException e){
             System.err.println("Error saving Employees " + e.getMessage());
+        }
+    }
+
+    public String chargeLastExecution(){
+
+        try(BufferedReader br = new BufferedReader(new FileReader(executionDay))){
+            String lastDayExecution = br.readLine();
+            return lastDayExecution;
+        }
+        catch(IOException ioe){
+            System.out.println("Error reading File " + ioe.getMessage());
+            return "";
+        }
+    }
+
+    public void saveLastExecution(String lastExecution){
+
+        try(PrintWriter out = new PrintWriter(new FileWriter(executionDay, false))){
+            out.print(lastExecution);
+        }
+        catch(IOException ioe){
+            System.out.println("Error writing File " + ioe.getMessage());
         }
     }
 }

@@ -15,6 +15,7 @@ public class FleetManager extends Employee {
 
     private static final long serialVersionUID = 1L;
     ArrayList<Boat> managedBoats = new ArrayList<Boat>();
+    int lastUpdatedYear = 0;
 
     public FleetManager(int id, String name, String surnames, LocalDate contractStartDate, double salary, int experience){
         super(id, name, surnames, contractStartDate, salary, experience);
@@ -90,10 +91,24 @@ public class FleetManager extends Employee {
         }
 
         FleetManager newFM = new FleetManager(id, name, surnames, contractStartDate, salary, experience);
+        newFM.lastUpdatedYear = contractStartDate.getYear();
         employees.add(newFM);
         System.out.println("New Fleet Manager with ID: " + newFM.getId() + " named: " + newFM.getName() + " " + newFM.getSurnames() + " created Successfully");
     }
 
+
+    @Override
+    public void updateBaseSalary() {
+
+        LocalDate today = LocalDate.now();
+
+        if(today.getMonth() == this.contractStartDate.getMonth()){
+            if(today.getYear() > this.lastUpdatedYear){
+                this.salary += 250;
+                this.lastUpdatedYear = today.getYear();
+            }
+        }
+    }
 
     public ArrayList<Boat> getManagedBoats() {
         return managedBoats;

@@ -569,17 +569,27 @@ public class FleetManagement {
                 if(diffMinutes > 0) {
                     potentialCoveredDistance = (diffMinutes * boat.maxVelocity) / 60;
 
-                    actualCovered = Math.min(potentialCoveredDistance, currentDist);
 
-                    boat.currentDistanceLeft = currentDist - actualCovered;
-                    boat.lastChecked = currentDate;
+                    if(potentialCoveredDistance >= currentDist){
+                        actualCovered = currentDist;
+                        long minutesToArrive = (long) ((currentDist* 60) / boat.maxVelocity);
+                        boat.lastChecked = boat.lastChecked.plusMinutes(minutesToArrive);
+                        boat.currentDistanceLeft = 0;
+                    }
+                    else{
+                        actualCovered = potentialCoveredDistance;
+                        boat.currentDistanceLeft = currentDist - actualCovered;
+                        boat.lastChecked = currentDate;
+                    }
 
                     if(boat.currentDistanceLeft <= 0){
                         boat.currentDistanceLeft = 0;
                         boat.unload();
                         boat.getCaptain().setTrips(boat.getCaptain().getTrips() + 1);
+                        boat.getCaptain().calculateSalaryBonus();
                         for(Sailor sailor : boat.getCrew()){
                             sailor.setTrips(sailor.getTrips() + 1);
+                            sailor.calculateBonus();
                         }
                     }
                 }
