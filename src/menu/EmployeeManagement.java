@@ -21,7 +21,16 @@ public class EmployeeManagement {
             System.out.println("1. Add Employee | 2. Remove Employee | 3. Assign Employee to a boat");
             System.out.println("4. Unassign Employee from a Ship | 5. Employee List | 6. Employee Info");
             System.out.println("7. Back");
-            option = input.nextInt();
+            try {
+                option = input.nextInt();
+                input.nextLine();
+            }
+            catch(InputMismatchException e) {
+                System.err.println("Please enter a valid Number");
+                input.nextLine();
+                option = 0;
+                continue;
+            }
             switch(option) {
                 case 1:
                     addEmployee(employees);
@@ -58,8 +67,16 @@ public class EmployeeManagement {
             System.out.println("Select the type of employee you want to add");
             System.out.println("1. Add Sailor | 2. Add Captain | 3. Add Fleet Manager");
             System.out.println("4. Back");
-            option = input.nextInt();
-            input.nextLine();
+            try {
+                option = input.nextInt();
+                input.nextLine();
+            }
+            catch(InputMismatchException e) {
+                System.err.println("Please enter a valid Number");
+                input.nextLine();
+                option = 0;
+                continue;
+            }
             switch(option) {
                 case 1:
                     Sailor.createSailor(employee);
@@ -84,9 +101,16 @@ public class EmployeeManagement {
 
         Employee employeeToRemove = null;
 
+        int id = 0;
         System.out.println("Type the ID of the Employee you want to remove");
-        int id = input.nextInt();
-        input.nextLine();
+        try {
+            id = input.nextInt();
+            input.nextLine();
+        }
+        catch(InputMismatchException e) {
+            System.err.println("Please enter a valid ID Number");
+            return;
+        }
 
         for(Employee e: employees){
             if(e.getId() == id){
@@ -122,9 +146,16 @@ public class EmployeeManagement {
         Employee employeeToAssign = null;
         Boat boatToAssign = null;
 
+        int employeeId = 0;
         System.out.println("Type the ID of the Employee you want to Assign to a boat");
-        int employeeId = input.nextInt();
-        input.nextLine();
+        try {
+            employeeId = input.nextInt();
+            input.nextLine();
+        }
+        catch(InputMismatchException e) {
+            System.err.println("Please enter a valid Number");
+            return;
+        }
 
         for(Employee e: employee){
             if(e.getId() == employeeId){
@@ -136,9 +167,16 @@ public class EmployeeManagement {
             return;
         }
 
+        int boatId = 0;
         System.out.println("Type the ID of the boat you want to Assign to");
-        int boatId = input.nextInt();
-        input.nextLine();
+        try {
+            boatId = input.nextInt();
+            input.nextLine();
+        }
+        catch(InputMismatchException e) {
+            System.err.println("Please enter a valid Number");
+            return;
+        }
 
         for(Boat boat: boats){
             if(boat.getId() == boatId){
@@ -210,8 +248,14 @@ public class EmployeeManagement {
                         System.out.println("And selected Ship has Captain with ID: " + boatToAssign.getCaptain().getId() + " Named: " + boatToAssign.getCaptain().getName());
                         System.out.println("Choose your action");
                         System.out.println("1. Exchange Captains and Ships | 2. Just assign selected Captain to the selected Boat | 3. Cancel");
-                        option = input.nextInt();
-                        input.nextLine();
+                        try {
+                            option = input.nextInt();
+                            input.nextLine();
+                        }
+                        catch (InputMismatchException e) {
+                            System.err.println("Please enter a valid Number");
+                            continue;
+                        }
 
                         Boat boatToExchange = captain.getAssignedBoat();
                         Captain captainToExchange = boatToAssign.getCaptain();
@@ -272,18 +316,15 @@ public class EmployeeManagement {
                 captain.setAssignedBoat(boatToAssign);
                 boatToAssign.setCaptain(captain);
                 System.out.println("Captain " +  captain.getName() + " " + captain.getSurnames() + " Assigned to " + boatToAssign.getName() + " Successfully");
-                return;
             }
         }
         else if(employeeToAssign instanceof FleetManager) {
             FleetManager fleetManager = (FleetManager) employeeToAssign;
             if(fleetManager.getManagedBoats().size() >= 5){
                 System.out.println("The Fleet Manager has the maximum managed boats assigned");
-                return;
             }
             else if(boatToAssign.getAssignedFM() == fleetManager){
                 System.out.println("The Fleet Manager is already managing that boat");
-                return;
             }
             else if(boatToAssign.getAssignedFM() != null){
                 System.out.println("The boat has already been assigned to the Fleet Manager " + boatToAssign.getAssignedFM().getId() + " " + boatToAssign.getAssignedFM().getName() + " " + boatToAssign.getAssignedFM().getSurnames());
@@ -299,7 +340,6 @@ public class EmployeeManagement {
                 fleetManager.getManagedBoats().add(boatToAssign);
                 boatToAssign.setAssignedFM(fleetManager);
                 System.out.println("Captain " +  fleetManager.getId() + " " + fleetManager.getName() + " " + fleetManager.getSurnames() + " Assigned to " + boatToAssign.getId() + " " + boatToAssign.getName() + " Successfully");
-                return;
             }
         }
     }
@@ -309,10 +349,16 @@ public class EmployeeManagement {
         Employee employeeToUnassign = null;
         Boat boatToUnassign = null;
 
+        int employeeId = 0;
         System.out.println("Type the ID of the Employee you want to Assign to a boat");
-        int employeeId = input.nextInt();
-        input.nextLine();
-
+        try {
+            employeeId = input.nextInt();
+            input.nextLine();
+        }
+        catch (InputMismatchException e) {
+            System.err.println("Enter a valid Number");
+            return;
+        }
         for(Employee e: employees){
             if(e.getId() == employeeId){
                 employeeToUnassign = e;
@@ -391,15 +437,34 @@ public class EmployeeManagement {
 
     public void employeeList(ArrayList<Employee> employees) {
 
-        for(Employee employee : employees){
-            if(employee instanceof Captain) {
-                System.out.println("Employee ID: " + employee.getId() + " Captain: " + employee.getName() + " " + employee.getSurnames());
+        for (Employee employee : employees) {
+            if (employee instanceof Captain) {
+                Captain captain = (Captain) employee;
+                if (captain.getAssignedBoat() != null) {
+                    System.out.println("Employee ID: " + captain.getId() + " Captain: " + captain.getName() + " " + captain.getSurnames() + " Is assigned to Ship with ID: " + captain.getAssignedBoat().getId() + " " + captain.getAssignedBoat().getName());
+                } else {
+                    System.out.println("Employee ID: " + captain.getId() + " Captain: " + captain.getName() + " " + captain.getSurnames() + " Is not assigned to any Ship");
+                }
             }
-            if(employee instanceof Sailor) {
-                System.out.println("Employee ID: " + employee.getId() + " Sailor: " + employee.getName() + " " + employee.getSurnames());
+            if (employee instanceof Sailor) {
+                Sailor sailor = (Sailor) employee;
+                if (sailor.getAssignedBoat() != null) {
+                    System.out.println("Employee ID: " + sailor.getId() + " Sailor: " + sailor.getName() + " " + sailor.getSurnames() + " Is assigned to Ship with ID: " + sailor.getAssignedBoat().getId() + " " + sailor.getAssignedBoat().getName());
+                }
+                System.out.println("Employee ID: " + employee.getId() + " Sailor: " + employee.getName() + " " + employee.getSurnames() + " Is not assigned to any Ship");
             }
-            if(employee instanceof FleetManager) {
-                System.out.println("Employee ID: " + employee.getId() + " Fleet Manager " + employee.getName() + " " + employee.getSurnames());
+            if (employee instanceof FleetManager) {
+                FleetManager fleetManager = (FleetManager) employee;
+                if (!fleetManager.getManagedBoats().isEmpty()) {
+                    System.out.println("Employee ID: " + employee.getId() + " Fleet Manager " + employee.getName() + " " + employee.getSurnames());
+                    System.out.println("Is managin the current Fleet: ");
+                    for (Boat boat : fleetManager.getManagedBoats()) {
+                        System.out.println("Boat ID: " + boat.getId() + " Named: " + boat.getName());
+                    }
+                } else {
+                    System.out.println("Employee ID: " + employee.getId() + " Fleet Manager " + employee.getName() + " " + employee.getSurnames());
+                    System.out.println("Currently has no fleet Assigned to Manage");
+                }
             }
         }
     }
@@ -408,13 +473,23 @@ public class EmployeeManagement {
 
         Employee infoEmployee = null;
 
+        int id = 0;
         System.out.println("Type the id of the employee");
-        int id = input.nextInt();
+        try {
+            id = input.nextInt();
+            input.nextLine();
+        }
+        catch (InputMismatchException e) {
+            System.out.println("Enter a valid Number");
+            return;
+        }
+
         for(Employee e : employees){
             if(e.getId() == id){
                 infoEmployee = e;
             }
         }
+
         if(infoEmployee != null){
             if(infoEmployee instanceof Sailor) {
                 Sailor sailorInfo = (Sailor) infoEmployee;
@@ -472,7 +547,7 @@ public class EmployeeManagement {
     public boolean changeBoat(){
 
         System.out.println("Do you want to change? (Y/N)");
-        String choice = input.next();
+        String choice = input.nextLine();
         if(choice.equalsIgnoreCase("y") || choice.equalsIgnoreCase("yes")){
             return true;
         }
