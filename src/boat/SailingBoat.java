@@ -100,12 +100,15 @@ public class SailingBoat extends Boat{
 
         }
         catch(InputMismatchException e){
-            System.out.println("The field only accepts numbers " + e.getMessage());
+            System.err.println("The field only accepts numbers " + e.getMessage());
             return;
         }
         catch(FieldRangeOutOfBoundsException e){
-            System.out.println("Field out of Bounds: " + e.getMessage());
+            System.err.println("Field out of Bounds: " + e.getMessage());
             return;
+        }
+        catch(Exception e){
+            System.err.println("General Error: " + e.getMessage());
         }
 
         SailingBoat newSailing = new SailingBoat(id, name, weight, maxVelocity, maxDistance, maxCrew, sails, maxPassengers);

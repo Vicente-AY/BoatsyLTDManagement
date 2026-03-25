@@ -122,6 +122,9 @@ public class CargoShip extends Boat {
             System.err.println("Field out of bounds: " +  e.getMessage());
             return;
         }
+        catch(Exception e){
+            System.err.println("General Error: " + e.getMessage());
+        }
 
         CargoShip newCargoShip = new CargoShip(id, name, weight, maxVelocity, maxDistance, maxCrew, maxCargo, engine);
         boats.add(newCargoShip);
