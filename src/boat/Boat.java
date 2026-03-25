@@ -40,7 +40,6 @@ public abstract class Boat implements Serializable {
 
     public abstract void setSail(double distance);
 
-
     public abstract void unload();
 
     //Getters and Setters
@@ -58,21 +57,6 @@ public abstract class Boat implements Serializable {
     }
     public int getMaxCrew() {
         return maxCrew;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-    public void setMaxVelocity(int maxVelocity) {
-        this.maxVelocity = maxVelocity;
-    }
-    public void setMaxDistance(int maxDistance) {
-        this.maxDistance = maxDistance;
-    }
-    public void setMaxCrew(int maxCrew) {
-        this.maxCrew = maxCrew;
     }
     public ArrayList<Sailor> getCrew() {
         return crew;
@@ -94,9 +78,6 @@ public abstract class Boat implements Serializable {
     }
     public double getCurrentDistanceLeft(){
         return currentDistanceLeft;
-    }
-    public void setCurrentDistanceLeft(double distance){
-        this.currentDistanceLeft = distance;
     }
     public LocalDateTime getSailDate(){
         return sailDate;

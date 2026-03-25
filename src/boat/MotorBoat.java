@@ -1,9 +1,11 @@
 package boat;
 
+import exceptions.FieldRangeOutOfBoundsException;
 import utils.Engine;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MotorBoat extends Boat{
@@ -24,6 +26,15 @@ public class MotorBoat extends Boat{
 
         Scanner input = new Scanner(System.in);
 
+        String name = "";
+        double weight = 0.0;
+        double maxVelocity =  0.0;
+        double maxDistance  =  0.0;
+        int maxCrew = 0;
+        double maxCargo = 0.0;
+        Engine engine = null;
+        int maxPassengers = 0;
+
         System.out.println("Creating Cargo Ship");
 
         int id = 0;
@@ -36,59 +47,90 @@ public class MotorBoat extends Boat{
         }
         id++;
 
-        System.out.println("Indicate the name of the ship");
-        String name = input.nextLine();
+        try {
+            System.out.println("Indicate de name of the ship");
+            name = input.nextLine();
 
-        System.out.println("Indicate de weight of the ship");
-        double weight = input.nextDouble();
-        input.nextLine();
+            if(name == null || name.isEmpty() || name == ""){
+                name = "MotorBoat" + id;
+            }
 
-        System.out.println("Indicate de max velocity of the ship");
-        double maxVelocity = input.nextDouble();
-        input.nextLine();
+            System.out.println("Indicate de weight of the ship (Tons - Max 45)");
+            weight = input.nextDouble();
+            input.nextLine();
+            if(weight <= 0 || weight > 45000){
+                throw new FieldRangeOutOfBoundsException("The maximum Weight of a Motor Boat cannot be less or equal to 0 or surpass 45.000 Tons");
+            }
+
+            System.out.println("Indicate de max velocity of the ship (Km/h - max 260)");
+            maxVelocity = input.nextDouble();
+            input.nextLine();
+            if(maxVelocity <= 0 || weight > 260){
+                throw new FieldRangeOutOfBoundsException("The maximum Velocity of a Motor Boat cannot be less or equal to 0 or surpass 260Km/h");
+            }
 
 
-        System.out.println("Indicate the maximum distance of the ship");
-        double maxDistance = input.nextDouble();
-        input.nextLine();
+            System.out.println("Indicate the maximum distance of the ship (Km - max 700");
+            maxDistance = input.nextDouble();
+            input.nextLine();
+            if(maxDistance <= 0 || maxDistance > 700){
+                throw new FieldRangeOutOfBoundsException("The maximum Distance of a Motor Boat cannot be less or equal to 0 or surpass 700Km");
 
-        System.out.println("Indicate the maximum crew capacity of the ship");
-        int maxCrew = input.nextInt();
-        input.nextLine();
+            }
 
-        System.out.println("Indicate the engine type of the ship");
-        System.out.println("1. Diesel | 2. Gasoline | 3. Electric");
-        int option = input.nextInt();
-        input.nextLine();
-        Engine engine = null;
-        boolean cont = true;
-        while(cont) {
-            switch (option) {
-                case 1:
-                    engine = Engine.Diesel;
-                    cont = false;
-                    break;
-                case 2:
-                    engine = Engine.Gasoline;
-                    cont = false;
-                    break;
-                case 3:
-                    engine = Engine.Electric;
-                    cont = false;
-                    break;
-                default:
-                    System.out.println("Invalid option");
-                    break;
+            System.out.println("Indicate the maximum crew capacity of the ship (Max - 10 Crew Members");
+            maxCrew = input.nextInt();
+            input.nextLine();
+            if(maxCrew <= 0 || maxCrew > 10){
+                throw new FieldRangeOutOfBoundsException("The maximum Crew of a Motor Boat cannot be less or equal to 0 or surpass 10 Crew Mempers");
+            }
+
+
+            boolean cont = true;
+            while (cont) {
+                System.out.println("Indicate the engine type of the ship");
+                System.out.println("1. Diesel | 2. Gasoline | 3. Electric");
+                int option = input.nextInt();
+                input.nextLine();
+                switch (option) {
+                    case 1:
+                        engine = Engine.Diesel;
+                        cont = false;
+                        break;
+                    case 2:
+                        engine = Engine.Gasoline;
+                        cont = false;
+                        break;
+                    case 3:
+                        engine = Engine.Electric;
+                        cont = false;
+                        break;
+                    default:
+                        System.out.println("Invalid option");
+                        break;
+                }
+            }
+
+            System.out.println("Indicate the maximum passengers of the ship (Max 20 passengers)");
+            maxPassengers = input.nextInt();
+            input.nextLine();
+            if(maxPassengers <= 0 || maxPassengers > 20){
+                throw new FieldRangeOutOfBoundsException("The maximum Passewngers of a Motor Boat cannot be less or equal to 0 or surpass 20 passengers");
             }
         }
 
-        System.out.println("Indicate the maximum passengers of the ship");
-        int maxPassengers = input.nextInt();
-        input.nextLine();
+        catch(InputMismatchException e) {
+            System.out.println("The field only accepts numbers " + e.getMessage());
+            return;
+        }
+        catch(FieldRangeOutOfBoundsException e) {
+            System.out.println("Field out of Bounds: " + e.getMessage());
+            return;
+        }
 
         MotorBoat newMB = new MotorBoat(id, name, weight, maxVelocity, maxDistance, maxCrew, engine, maxPassengers);
         boats.add(newMB);
-        System.out.println("Motor Boat added to the fleet!");
+        System.out.println("Motor Boat with ID: " + newMB.getId() + " Named: " + newMB.getName() + " added to the fleet!");
     }
 
     public void load(int passengers){

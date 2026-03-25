@@ -1,10 +1,12 @@
 package boat;
 
+import exceptions.FieldRangeOutOfBoundsException;
 import utils.Engine;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SailingBoat extends Boat{
@@ -24,7 +26,17 @@ public class SailingBoat extends Boat{
 
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Creating Cargo Ship");
+        String name = "";
+        double weight = 0.0;
+        double maxVelocity =  0.0;
+        double maxDistance  =  0.0;
+        int maxCrew = 0;
+        double maxCargo = 0.0;
+        Engine engine = null;
+        int maxPassengers = 0;
+        int sails = 0;
+
+        System.out.println("Creating Sailing Boat");
 
         int id = 0;
         for (Boat b : boats) {
@@ -36,38 +48,69 @@ public class SailingBoat extends Boat{
         }
         id++;
 
-        System.out.println("Indicate the name of the ship");
-        String name = input.nextLine();
+        try {
+            System.out.println("Indicate de name of the ship");
+            name = input.nextLine();
+            if(name == null || name.isEmpty() || name == ""){
+                name = "SailingBoat" + id;
+            }
 
-        System.out.println("Indicate de weight of the ship");
-        double weight = input.nextDouble();
-        input.nextLine();
+            System.out.println("Indicate de weight of the ship (Tons - Max 45");
+            weight = input.nextDouble();
+            input.nextLine();
+            if(weight <= 0 || weight > 45) {
+                throw new FieldRangeOutOfBoundsException("The maximum Weight of a Sailing Boat cannot be less or equal to 0 or surpass 45 Tons");
+            }
 
-        System.out.println("Indicate de max velocity of the ship");
-        int maxVelocity = input.nextInt();
-        input.nextLine();
+            System.out.println("Indicate de max velocity of the ship (Km/h - Max 120");
+            maxVelocity = input.nextInt();
+            input.nextLine();
+            if(maxVelocity <= 0 || maxVelocity > 120) {
+                throw new FieldRangeOutOfBoundsException("The maximum Velocity of a Sailing Boat cannot be less or equal to 0 or surpass 120Km/h");
+            }
 
+            System.out.println("Indicate the maximum distance of the ship (Km - Max 6000");
+            maxDistance = input.nextInt();
+            input.nextLine();
+            if(maxDistance <= 0 || maxDistance > 6000) {
+                throw new FieldRangeOutOfBoundsException("The maximum Distance of a Sailing Boat cannot be less or equal to 0 or surpass 6000Km");
 
-        System.out.println("Indicate the maximum distance of the ship");
-        int maxDistance = input.nextInt();
-        input.nextLine();
+            }
 
-        System.out.println("Indicate the maximum crew of the ship");
-        int maxCrew = input.nextInt();
-        input.nextLine();
+            System.out.println("Indicate the maximum crew of the ship (Max 10 Crew members");
+            maxCrew = input.nextInt();
+            input.nextLine();
+            if(maxCrew <= 0 ||  maxCrew > 10) {
+                throw new FieldRangeOutOfBoundsException("The maximum Crew of a Sailing Boat cannot be less or equal to 0 or surpass 10 Crew members");
+            }
 
-        System.out.println("Indicate the amount of sails of the ship");
-        int sails = input.nextInt();
-        input.nextLine();
+            System.out.println("Indicate the amount of sails of the ship (Max 35");
+            sails = input.nextInt();
+            input.nextLine();
+            if(sails <= 0 || sails > 35) {
+                throw new FieldRangeOutOfBoundsException("The maximum amount of Sails of a Sail Boat cannot be less or equal to 0 or surpass 35 Units");
+            }
 
-        System.out.println("Indicate the maximum passengers of the ship");
-        int maxPassengers = input.nextInt();
-        input.nextLine();
+            System.out.println("Indicate the maximum passengers of the ship (Max 12 Passengers");
+            maxPassengers = input.nextInt();
+            input.nextLine();
+            if(maxPassengers <= 0 || maxPassengers > 12) {
+                throw new FieldRangeOutOfBoundsException("The maximum Passengers of a Sailing Boat cannot be less or equal to 0 or surpass 12 Passengers");
+            }
 
+        }
+        catch(InputMismatchException e){
+            System.out.println("The field only accepts numbers " + e.getMessage());
+            return;
+        }
+        catch(FieldRangeOutOfBoundsException e){
+            System.out.println("Field out of Bounds: " + e.getMessage());
+            return;
+        }
 
         SailingBoat newSailing = new SailingBoat(id, name, weight, maxVelocity, maxDistance, maxCrew, sails, maxPassengers);
         boats.add(newSailing);
-        System.out.println("Sailing Boat added to the fleet!");
+        System.out.println("Sailing Boat with ID: " + newSailing.getId() + " Named: " + newSailing.getName() + " added to the fleet!");
     }
 
     public void load(int passengers){

@@ -1,10 +1,11 @@
 package boat;
 
+import exceptions.FieldRangeOutOfBoundsException;
 import utils.Engine;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class CargoShip extends Boat {
@@ -24,6 +25,14 @@ public class CargoShip extends Boat {
 
         Scanner input = new Scanner(System.in);
 
+        String name = "";
+        double weight = 0.0;
+        double maxVelocity =  0.0;
+        double maxDistance  =  0.0;
+        int maxCrew = 0;
+        double maxCargo = 0.0;
+        Engine engine = null;
+
         System.out.println("Creating Cargo Ship");
 
         int id = 0;
@@ -36,59 +45,87 @@ public class CargoShip extends Boat {
         }
         id++;
 
-        System.out.println("Indicate de name of the ship");
-        String name = input.nextLine();
-
-        System.out.println("Indicate de weight of the ship");
-        double weight = input.nextDouble();
-        input.nextLine();
-
-        System.out.println("Indicate de max velocity of the ship");
-        double maxVelocity = input.nextDouble();
-        input.nextLine();
-
-
-        System.out.println("Indicate the maximum distance of the ship");
-        double maxDistance = input.nextDouble();
-        input.nextLine();
-
-        System.out.println("Indicate the maximum crew capacity of the ship");
-        int maxCrew = input.nextInt();
-        input.nextLine();
-
-        System.out.println("Indicate the maximum cargo of the ship");
-        double maxCargo = input.nextDouble();
-        input.nextLine();
-
-        System.out.println("Indicate the engine type of the ship");
-        System.out.println("1. Diesel | 2. GNL | 3. Electric");
-        int option = input.nextInt();
-        input.nextLine();
-        Engine engine = null;
-        boolean cont = true;
-        while(cont) {
-            switch (option) {
-                case 1:
-                    engine = Engine.Diesel;
-                    cont = false;
-                    break;
-                case 2:
-                    engine = Engine.GNL;
-                    cont = false;
-                    break;
-                case 3:
-                    engine = Engine.Electric;
-                    cont = false;
-                    break;
-                default:
-                    System.out.println("Invalid option");
-                    break;
+        try {
+            System.out.println("Indicate de name of the ship");
+            name = input.nextLine();
+            if(name == null || name.isEmpty() || name == ""){
+                name = "CargoShip" + id;
             }
+
+            System.out.println("Indicate de weight of the ship (Tons without load - Max 250.000)");
+            weight = input.nextDouble();
+            input.nextLine();
+            if(weight <= 0 || weight > 250.000){
+                throw new FieldRangeOutOfBoundsException("The maximum weight of a Cargo Ship cannot be less or equal to 0 or surpass 250.000 Tons");
+            }
+
+            System.out.println("Indicate de max velocity of the ship (Km/h");
+            maxVelocity = input.nextDouble();
+            input.nextLine();
+            if(maxVelocity <= 0 ||  maxVelocity > 50){
+                throw new FieldRangeOutOfBoundsException("The maximum velocity of a Cargo Ship cannot be less or equal to 0 or surpass 50Km/h ");
+            }
+
+            System.out.println("Indicate the maximum distance of the ship (Km)");
+            maxDistance = input.nextDouble();
+            input.nextLine();
+            if(maxDistance <= 0 || maxDistance > 30000){
+                throw new FieldRangeOutOfBoundsException("The maximum distance of a Cargo Ship cannot be less or equal to 0 or surpass 30.000Km");
+
+            }
+
+            System.out.println("Indicate the maximum crew capacity of the ship");
+            maxCrew = input.nextInt();
+            input.nextLine();
+            if(maxCrew <= 0 || maxCrew > 40) {
+                throw new FieldRangeOutOfBoundsException("The maximum crew of a Cargo Ship cannot be less or equal to 0 or surpass 40 crew members");
+            }
+
+            System.out.println("Indicate the maximum cargo of the ship (Tons)");
+            maxCargo = input.nextDouble();
+            input.nextLine();
+            if(maxCargo <= 0 || maxCargo > 500_000){
+                throw new FieldRangeOutOfBoundsException("The maximum Cargo of a Cargo Ship cannot be less or equal to 0 or surpass 500.000 Tons");
+            }
+
+
+            boolean cont = true;
+            while (cont) {
+                System.out.println("Indicate the engine type of the ship");
+                System.out.println("1. Diesel | 2. GNL | 3. Electric");
+                int option = input.nextInt();
+                input.nextLine();
+                switch (option) {
+                    case 1:
+                        engine = Engine.Diesel;
+                        cont = false;
+                        break;
+                    case 2:
+                        engine = Engine.GNL;
+                        cont = false;
+                        break;
+                    case 3:
+                        engine = Engine.Electric;
+                        cont = false;
+                        break;
+                    default:
+                        System.out.println("Invalid option");
+                        break;
+                }
+            }
+        }
+        catch(InputMismatchException e) {
+            System.err.println("The field only accepts numbers " + e.getMessage());
+            return;
+        }
+        catch(FieldRangeOutOfBoundsException e) {
+            System.err.println("Field out of bounds: " +  e.getMessage());
+            return;
         }
 
         CargoShip newCargoShip = new CargoShip(id, name, weight, maxVelocity, maxDistance, maxCrew, maxCargo, engine);
         boats.add(newCargoShip);
-        System.out.println("Cargo Ship added to the fleet!");
+        System.out.println("Cargo Ship with ID: " + newCargoShip.getId() + " Named: " + newCargoShip.getName() + " added to the fleet!");
     }
 
     public void load(double cargo){
