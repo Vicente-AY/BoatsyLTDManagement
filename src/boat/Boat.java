@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
+/**
+ * Clase abstracta que representa un Barco
+ */
 public abstract class Boat implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,7 +31,15 @@ public abstract class Boat implements Serializable {
     LocalDateTime dateOfArrival = null;
     public LocalDateTime lastChecked = null;
 
-
+    /**
+     * Constructor de la clase
+     * @param id identificador unico para cada barco
+     * @param name nombre de la nave
+     * @param weight peso del barco
+     * @param maxVelocity velocidad maxima del barco
+     * @param maxDistance distancia maxima que el barco puede recorrer
+     * @param maxCrew tripulación maxima que el barco puede tener a la vez
+     */
     public Boat(int id, String name, double weight, double maxVelocity, double maxDistance, int maxCrew) {
         this.id = id;
         this.name = name;
@@ -38,11 +49,19 @@ public abstract class Boat implements Serializable {
         this.maxCrew = maxCrew;
     }
 
+    /**
+     * Metodo abstracto que hace que un barco zarpe
+     * @param distance distancia que queremos que se desplaze el barco
+     */
     public abstract void setSail(double distance);
 
+    /**
+     * Metodo abstracto que descarga un barco
+     */
     public abstract void unload();
 
     //Getters and Setters
+
     public int getId() {
         return id;
     }

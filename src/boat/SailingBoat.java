@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Clase que identifica un velero
+ */
 public class SailingBoat extends Boat{
 
     private static final long serialVersionUID = 1L;
@@ -16,12 +19,27 @@ public class SailingBoat extends Boat{
     int maxPassengers = 0;
     int currentPassengers = 0;
 
+    /**
+     * Constructor que crea nuevos veleros
+     * @param id identifiador unico de barco
+     * @param name nombre del barco
+     * @param weight peso del barco
+     * @param maxVelocity velocidad maxima del barco
+     * @param maxDistance distancia maxima que el barco puede recorrer
+     * @param maxCrew tripulación maxima que el barco puede tener al mismo tiempo
+     * @param sails numero de velas que usael velero
+     * @param maxPassengers numero maximo de pasajeros que se puede transportar
+     */
     public SailingBoat(int id, String name, double weight, double maxVelocity, double maxDistance, int maxCrew, int sails, int maxPassengers) {
         super(id, name, weight, maxVelocity, maxDistance, maxCrew);
         this.sails = sails;
         this.maxPassengers = maxPassengers;
     }
 
+    /**
+     * Metodo que crea nuevos veleros
+     * @param boats lista con todos los barcos del sistema
+     */
     public static void createSailingBoat(ArrayList<Boat> boats){
 
         Scanner input = new Scanner(System.in);
@@ -38,6 +56,7 @@ public class SailingBoat extends Boat{
 
         System.out.println("Creating Sailing Boat");
 
+        //recorremos la lista de barcos buscando el id mas alto para no repetirlo
         int id = 0;
         for (Boat b : boats) {
             if(!boats.isEmpty()){
@@ -48,6 +67,7 @@ public class SailingBoat extends Boat{
         }
         id++;
 
+        //solicitamos al usuario los datos del barco
         try {
             System.out.println("Indicate de name of the ship");
             name = input.nextLine();
@@ -99,6 +119,7 @@ public class SailingBoat extends Boat{
             }
 
         }
+        //capturamos las excepciones lanzadas
         catch(InputMismatchException e){
             System.err.println("The field only accepts numbers " + e.getMessage());
             return;
@@ -112,11 +133,16 @@ public class SailingBoat extends Boat{
             return;
         }
 
+        //creamos el nuevo velero lo añadimos a la lista y mostramos por pantalla su id y nombre
         SailingBoat newSailing = new SailingBoat(id, name, weight, maxVelocity, maxDistance, maxCrew, sails, maxPassengers);
         boats.add(newSailing);
         System.out.println("Sailing Boat with ID: " + newSailing.getId() + " Named: " + newSailing.getName() + " added to the fleet!");
     }
 
+    /**
+     * Metodo que permite la carga de pasajeros al velero
+     * @param passengers nuemor de pasajeros que queremos cargar al barco
+     */
     public void load(int passengers){
 
         if(passengers > 0) {
@@ -133,24 +159,28 @@ public class SailingBoat extends Boat{
         }
     }
 
+    /**
+     * Metodo que permite la descarga total de pasajeros del barco
+     */
     @Override
     public void unload(){
         this.currentPassengers = 0;
     }
 
+    /**
+     * Metodo que permite al barco zarpar de puerto
+     * @param distance distancia que queremos que se desplaze el barco
+     */
     @Override
     public void setSail(double distance){
 
+        //Si no puede zarpar cancelamos la operación
         if(!canSail(distance)){
             return;
         }
 
-        if(this.currentPassengers < this.maxPassengers){
-            if(!confirmDeparture()){
-                System.out.println("Operation cancelled");
-                return;
-            }
-        }
+        /*De poder zarpar confirmamos la operación por pantalla, calculamos el tiempo que tardará en llegar al destino
+        y modificamos las variables necesarias*/
         System.out.println("Setting course");
         long minutes = (long) (distance / (this.maxVelocity / 60));
         this.sailDate = LocalDateTime.now();
@@ -159,31 +189,54 @@ public class SailingBoat extends Boat{
         this.currentDistanceLeft = distance;
     }
 
+    /**
+     * Metodo auxiliar que identifica si un barco puede o no zarpar
+     * @param distance distancia que queremos dedsplazar al barco
+     * @return booleanto true si puede zarpar o false si no puede
+     */
     public boolean canSail(double distance){
 
+        //Si la distancia proporcionada es mayor a la distancia maxima no podrá zarpar
         if(distance > this.maxDistance){
             System.out.println("Sail out of bounds!");
             return false;
         }
+        //Si no tiene capitán asignado no podrá zarpar
         if(this.captain == null){
             System.out.println("The captain has not been set!");
             return false;
         }
+        //Si no tiene Asistente de flota no podrá zarpar
         if(this.assignedFM == null){
             System.out.println("The Fleet Manager has not been set!");
             return false;
         }
+        //Si la tripulación actual es menor a la mitad de la tripulación maxima no pdorá zarpar
         if(this.crew.size() < (this.maxCrew / 2)){
             System.out.println("Not enough crew!");
             return false;
         }
+        //Si los pasajeros actuales son menores a los pasajeros maximos posibles requerira de confirmación por parte
+        // del usuario para poder zarpar
+        if(this.currentPassengers < this.maxPassengers){
+            if(!confirmDeparture()){
+                System.out.println("Operation cancelled");
+                return true;
+            }
+        }
         return true;
     }
 
+    /**
+     * Metodo auxiliar que pregunta al usuario si desea zarpar pese a las condiciones mostradas
+     * @return booleano true si puede zarpar, false si no puede
+     */
     public boolean confirmDeparture(){
 
+        //Mostramos la situación de pasajeros por pantalla
         Scanner input = new Scanner(System.in);
         System.out.println("Warning! The ship is not full of passengers (" + this.currentPassengers + "/" + this.maxPassengers + ")");
+        //solicitamos confirmación al suaurio
         System.out.println("Are you sure do you want to set sail? (Y/N)");
         String option = input.nextLine();
         if(option.equalsIgnoreCase("y") || option.equalsIgnoreCase("yes")){
@@ -193,6 +246,8 @@ public class SailingBoat extends Boat{
             return false;
         }
     }
+
+    //Getters y Setters
 
     public int getSails(){
         return sails;

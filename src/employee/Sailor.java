@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Clase que identifica un Marinero
+ */
 public class Sailor extends Employee {
 
     private static final long serialVersionUID = 1L;
@@ -18,13 +21,26 @@ public class Sailor extends Employee {
     double bonus = 0;
     double monthDistance = 0;
     Boat assignedBoat = null;
-    int nextTripsForRise = 100;
+    int nextTripsForRise = 150;
     int lastUpdatedYear = 0;
 
+    /**
+     * Constructor de la clase marinero
+     * @param id identificador unico por empleado
+     * @param name nombre del marinero
+     * @param surnames apellidos del marinero
+     * @param contractStartDate fecha de inicio de contrato con la compañia
+     * @param salary salario del marinero
+     * @param experience experiencia del marinero
+     */
     public Sailor(int id, String name, String surnames, LocalDate contractStartDate, double salary, int experience) {
         super(id, name, surnames, contractStartDate, salary, experience);
     }
 
+    /**
+     * Metodo que permite crear nuevos marineros y añadirlos al sistema
+     * @param employees lista con todos los empleados registrados en el sistema
+     */
     public static void createSailor(ArrayList<Employee> employees) {
 
         Scanner input = new Scanner(System.in);
@@ -35,6 +51,7 @@ public class Sailor extends Employee {
         double salary = 0.0;
         int experience = 0;
 
+        //recorremos la lista de empleados buscando el id mas alto para no repetir id
         System.out.println("Adding a new employee");
         int id = 0;
         if(!employees.isEmpty()) {
@@ -46,6 +63,7 @@ public class Sailor extends Employee {
         }
         id++;
 
+        //preguntamos al usuario los datos del nuevo marinero
         try {
             System.out.println("Indicate the name of the sailor");
             name = input.nextLine();
@@ -77,6 +95,7 @@ public class Sailor extends Employee {
                 throw new NegativeNumberException("Experience cannot be negative");
             }
         }
+        //capturamos las excepciones lanzadas
         catch(DateTimeParseException e){
             System.err.println("Invalid Time Format " + e.getMessage());
             return;
@@ -94,27 +113,37 @@ public class Sailor extends Employee {
             return;
         }
 
+        /*Creamos al nuevo marinero, le añadimos fecha de actualización para las subidas salariales, lo añadimos
+        al listado de empleados y mostramos su id y nombre por pantalla*/
         Sailor newSailor = new Sailor(id, name, surnames, contractStartDate, salary, experience);
         newSailor.lastUpdatedYear = contractStartDate.getYear();
         employees.add(newSailor);
         System.out.println("New Sailor with ID: " + newSailor.getId() + " Named: " + newSailor.getName() + " " + newSailor.getSurnames() + " created Successfully");
     }
 
+    /**
+     * Metodo que permite calcula el bono del marinero en base a la distancia recorrida ese mes
+     */
     public void calculateBonus(){
 
         this.bonus = this.monthDistance / 100;
     }
 
+    /**
+     * Metodo que actualiza el sueldo del marinero en base a varias reglas
+     */
     @Override
     public void updateBaseSalary() {
 
         LocalDate today = LocalDate.now();
 
+        //si ha superado el limte de viajes, se aumenta el salario y se actualiza el limite
         if(this.trips >= nextTripsForRise){
-            this.salary += 150;
-            this.nextTripsForRise += 100;
+            this.salary += 100;
+            this.nextTripsForRise += 150;
         }
 
+        //si cumple otro año en la compalia se le actualiza el salario nuevamente
         if(today.getMonth() == this.contractStartDate.getMonth()){
             if(today.getYear() > this.lastUpdatedYear){
                 this.salary += 25;

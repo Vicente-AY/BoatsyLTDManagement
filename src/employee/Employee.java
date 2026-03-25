@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * Clase abstracta que identifica a un empleado de la compañia
+ */
 public abstract class Employee implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -16,6 +19,15 @@ public abstract class Employee implements Serializable {
     double salary = 0;
     int experience = 0;
 
+    /**
+     * Constructor de empleado
+     * @param id identificador unico para cada empleado
+     * @param name nombre del empleado
+     * @param surnames apellidos del empleado
+     * @param contractStartDate fecha de inicación de contrato con la compañia
+     * @param salary salario del empleado
+     * @param experience años de experiencia del empleado
+     */
     public Employee(int id, String name, String surnames, LocalDate contractStartDate, double salary, int experience) {
         this.id = id;
         this.name = name;
@@ -25,6 +37,9 @@ public abstract class Employee implements Serializable {
         this.experience = experience;
     }
 
+    /**
+     * Metodo abstracto de actualización del empleado
+     */
     public abstract void updateBaseSalary();
 
     //Getters y Setters
