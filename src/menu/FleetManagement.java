@@ -9,11 +9,19 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Clase que permite el manejo de la flota a través de diversos metodos
+ */
 public class FleetManagement {
 
     java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss");
     Scanner input = new Scanner(System.in);
 
+    /**
+     * Metodo que sirve de menú donde el usuario puede navegar por los distintos metodos a su disposición
+     * @param boats lista de todos los barcos del sistema
+     * @param employees lista con todos los empleados registrados
+     */
     public void fleetManagementMenu(ArrayList<Boat> boats, ArrayList<Employee> employees){
 
         int option = 0;
@@ -68,6 +76,10 @@ public class FleetManagement {
         }
     }
 
+    /**
+     * Metodo que permite añadir un nuevo barco a la flota de la compañia
+     * @param boats lista con todos los barcos del sistema
+     */
     public void addBoat(ArrayList<Boat> boats){
 
         int option = 0;
@@ -106,10 +118,15 @@ public class FleetManagement {
         }
     }
 
+    /**
+     * Metodo que permite la eliminación de un barco de la flota de la compañia
+     * @param boats lista de todos los barcos del sistema
+     */
     public void removeBoat(ArrayList<Boat> boats){
 
         Boat boatToRemove = null;
 
+        //solicitamos la id del barco a eliminar
         int id = 0;
         System.out.println("Type the ID of the Boat you want to remove");
         try {
@@ -120,20 +137,24 @@ public class FleetManagement {
             System.err.println("Enter a valid number");
             return;
         }
+        //buscamos el id en la lista de barcos
         for(Boat boat : boats){
             if(boat.getId() == id){
                 boatToRemove = boat;
             }
         }
         if(boatToRemove != null) {
+            //si el barco no esta en puerto cancelaremos la operación
             if(boatToRemove.getCurrentDistanceLeft() > 0){
                 System.out.println("Sorry, the ship is on duty. Wait until arrival before deleting it");
                 return;
             }
+            //si el barco tiene todavia tripulación asignada no se podrá eliminar el barco
             if (boatToRemove.getAssignedFM() != null || boatToRemove.getCaptain() != null || boatToRemove.getCrew().size() > 0) {
                 System.out.println("Sorry, the ship as already personal on board. Remove them first before deleting the ship");
                 return;
             }
+            //preguntamos al usuario si realmente desea eliminar el barco seleccionado mostrando su tipo, id y nombre
             if (boatToRemove instanceof CargoShip) {
                 System.out.println("Are you sure you want to remove Cargo Ship " + boatToRemove.getId() + " " + boatToRemove.getName() + "?");
             }
@@ -152,15 +173,22 @@ public class FleetManagement {
                 System.out.println("Cancelling operation");
             }
         }
+        //si el barco no se ha encontrado mostramos la situación por pantalla
         else{
             System.out.println("Ship ID not found");
         }
     }
 
+    /**
+     * Metodo que sirve para asignar tripulación completa de forma  automatica al barco seleccionado
+     * @param boats lista de todos los barcos registrados
+     * @param employees lista con todos los empleados del sistema
+     */
     public void assignCrew(ArrayList<Boat> boats, ArrayList<Employee> employees){
 
         Boat boatToAssign = null;
 
+        //solicitamos al usuario el id del barco que desea asignar tripulación
         int id = 0;
         System.out.println("Type the ID of the Boat you want to assign crew");
         try {
@@ -179,6 +207,7 @@ public class FleetManagement {
 
         if(boatToAssign != null) {
 
+            //si el barco está en un viaje no podrá realizarse la operación
             if(boatToAssign.getCurrentDistanceLeft() > 0){
                 System.out.println("Sorry, the ship is on duty. Wait until arrival");
                 return;
@@ -186,6 +215,7 @@ public class FleetManagement {
 
             for(Employee employee : employees){
 
+                //llenamos la lista de marineros del barco seleccionado hasta que esta esté llena
                 if(employee instanceof Sailor){
                     Sailor sailorToAssign = (Sailor) employee;
                     if(sailorToAssign.getAssignedBoat() == null && boatToAssign.getCrew().size() < boatToAssign.getMaxCrew()){
@@ -193,13 +223,15 @@ public class FleetManagement {
                         sailorToAssign.setAssignedBoat(boatToAssign);
                     }
                 }
-                if(employee instanceof Captain) {
+                //si el barco no tiene capitán le asignamos uno
+                else if(employee instanceof Captain) {
                     Captain captainToAssign = (Captain) employee;
                     if (captainToAssign.getAssignedBoat() == null && boatToAssign.getCaptain() == null) {
-                        boatToAssign.setCaptain((Captain) employee);
-                        ((Captain) employee).setAssignedBoat(boatToAssign);
+                        boatToAssign.setCaptain(captainToAssign);
+                        captainToAssign.setAssignedBoat(boatToAssign);
                     }
                 }
+                //comprobamos que el asistente de flota no está asignado al barco seleccionado
                 if(employee instanceof FleetManager){
                     FleetManager  fleetManagerToAssign = (FleetManager) employee;
                     Boolean managinBoat = false;
@@ -208,32 +240,53 @@ public class FleetManagement {
                             managinBoat = true;
                         }
                     }
+                    /*si el barco seleccionado no tiene asistente de flota, el asistente de flota no tiene 5 barcos
+                    asignados y el asistente no tiene el barco seleccionado en su lista de gestión procederemos
+                    con la operacion*/
                     if(boatToAssign.getAssignedFM() == null && fleetManagerToAssign.getManagedBoats().size() < 5 && !managinBoat){
                         boatToAssign.setAssignedFM(fleetManagerToAssign);
                         fleetManagerToAssign.getManagedBoats().add(boatToAssign);
                     }
                 }
+                //si el barco ya tiene capitán, asistente de flota y el numero maximo de marineros rompemos el bucle
                 if(boatToAssign.getCaptain() != null &&
                     boatToAssign.getAssignedFM() != null &&
                     boatToAssign.getCrew().size() >= boatToAssign.getMaxCrew()){
                     break;
                 }
             }
+            //imprimimos por pantalla la nueva situación del barco con respecto al personal asignado
             System.out.println("Operation successfull");
             System.out.println("Boat with ID: " + boatToAssign.getId() + " Named: " + boatToAssign.getName());
             System.out.println("Crewed with " + boatToAssign.getCrew().size() + "/" + boatToAssign.getMaxCrew() + " Sailors");
-            System.out.println("Captain Assigned: " + boatToAssign.getCaptain().getName() + " " + boatToAssign.getCaptain().getSurnames());
-            System.out.println("Fleet Manager Assigned: " + boatToAssign.getAssignedFM().getName() + " " + boatToAssign.getAssignedFM().getSurnames());
+            if(boatToAssign.getCaptain() == null){
+                System.out.println("There is no captain available");
+            }
+            else {
+                System.out.println("Captain Assigned: " + boatToAssign.getCaptain().getName() + " " + boatToAssign.getCaptain().getSurnames());
+            }
+            if(boatToAssign.getAssignedFM() == null){
+                System.out.println("There is no assigned FM available");
+            }
+            else {
+                System.out.println("Fleet Manager Assigned: " + boatToAssign.getAssignedFM().getName() + " " + boatToAssign.getAssignedFM().getSurnames());
+            }
         }
+        //si no encontramos el ID lo mostramos por pantalla
         else{
             System.out.println("ID not bound");
         }
     }
 
+    /**
+     * Metodo que sirve para desasignar a todos los tripulantes de un barco
+     * @param boats lista de los barcos registrados por el sistema
+     */
     public void unassignCrew(ArrayList<Boat> boats){
 
         Boat boatUnassign = null;
 
+        //solicitamos al usuario la id del barco que desea desasignar tripulación
         int id = 0;
         System.out.println("Type the ID of the Ship you want to Unassign Personal");
         try {
@@ -252,33 +305,47 @@ public class FleetManagement {
 
         if(boatUnassign != null) {
 
+            //si el barco está en viaje no podrá realiar la operación
             if(boatUnassign.getCurrentDistanceLeft() > 0){
                 System.out.println("The ship is on Duty. Wait until arrival");
                 return;
             }
 
+            //de tener capitán lo desasignamos al barco
             if(boatUnassign.getCaptain() != null){
                 boatUnassign.getCaptain().setAssignedBoat(null);
                 boatUnassign.setCaptain(null);
             }
+            //de tener asistente de flota lo desasignamos
             if(boatUnassign.getAssignedFM() != null){
                 boatUnassign.getAssignedFM().getManagedBoats().remove(boatUnassign);
                 boatUnassign.setAssignedFM(null);
             }
+            //de tener marineros los desasignamos
             if(!boatUnassign.getCrew().isEmpty()) {
                 for (Sailor sailor : boatUnassign.getCrew()) {
                     sailor.setAssignedBoat(null);
                 }
+                //desasignamos a todos los marineros de la lista del barco fuera del bucle para eviatar problemas
                 boatUnassign.getCrew().clear();
             }
+        }
+        //de no encontrar el barco mostramos la situación por pantalla
+        else{
+            System.out.println("ID not found");
         }
         System.out.println("Unassign Operation successful");
     }
 
+    /**
+     * Metodo que muestra toda la información de un barco
+     * @param boats lista con todos los barcos registrados
+     */
     public void shipInfo(ArrayList<Boat> boats) {
 
         Boat boatInfo = null;
 
+        //solicitamos la id al usuario del barco del que desea la información
         int id = 0;
         System.out.println("Type the ID of the Ship you want Info about");
         try {
@@ -295,6 +362,7 @@ public class FleetManagement {
             }
         }
 
+        //de encontrar al barco imprimimos su tipo y caracteristicas generales y unicas
         if (boatInfo != null) {
             if (boatInfo instanceof MotorBoat) {
                 MotorBoat motorBoat = (MotorBoat) boatInfo;
@@ -378,12 +446,20 @@ public class FleetManagement {
                 }
             }
         }
+        else{
+            System.out.println("ID not found");
+        }
     }
 
+    /**
+     * Metodo que sirve para cargar de pasajeros o mercancias el barco seleccionado
+     * @param boats lista con todos los barcos registrados
+     */
     public void loadShip(ArrayList<Boat> boats) {
 
         Boat boatToLoad = null;
 
+        //solicitamos al usuario la id del barco que desea cargar
         int id = 0;
         System.out.println("Type the ID of the ship you want to load");
         try {
@@ -401,6 +477,7 @@ public class FleetManagement {
             }
         }
 
+        //dependiendo del tipo de barco solicitamos la información de carga
         if(boatToLoad != null){
             if(boatToLoad instanceof CargoShip) {
                 CargoShip cargoShip = (CargoShip) boatToLoad;
@@ -418,6 +495,7 @@ public class FleetManagement {
                     cargoShip.load(tons);
                 }
             }
+            //de no ser barcos de carga solicitamos pasajeros
             else{
                 int passengers = 0;
                 boolean cont = true;
@@ -441,12 +519,20 @@ public class FleetManagement {
                 }
             }
         }
+        else{
+            System.out.println("ID not found");
+        }
     }
 
+    /**
+     * Metodo que sirve para enviar a un barco a un viaje
+     * @param boats lista de todos los barcos registrados por el sistema
+     */
     public void setSailShip(ArrayList<Boat> boats) {
 
         Boat boatToSail = null;
 
+        //solicitamos al usuario el id del barco que desea enviar a un viaje
         int id = 0;
         System.out.println("Type the ID of the ship you want to start a trip");
         try {
@@ -457,6 +543,7 @@ public class FleetManagement {
             System.err.println("Please enter a valid Number");
         }
 
+        //buscamos el barco
         for(Boat boat : boats) {
             if(boat.getId() == id) {
                 boatToSail = boat;
@@ -464,6 +551,7 @@ public class FleetManagement {
         }
 
         if(boatToSail != null){
+            //solicitamos al usuario la distancia que desea que recorra el barco
             System.out.println("Type the distance you want the ship to trip");
             double distance = 0;
             try {
@@ -476,14 +564,22 @@ public class FleetManagement {
             }
             boatToSail.setSail(distance);
         }
+        else{
+            System.out.println("ID not found");
+        }
     }
 
+    /**
+     * Metodo que sirve para ver el estado del viaje de un barco
+     * @param boats lista con todos los barcos registrados
+     */
     public void shipTripStatus(ArrayList<Boat> boats) {
 
         Boat boatTripStatus = null;
 
         boatTripStatusUpdate(boats);
 
+        //solicitamos el id del barco del que el usuario desea saber su situación
         int id = 0;
         System.out.println("Type the ID of the ship you want to see its status");
         try {
@@ -495,6 +591,7 @@ public class FleetManagement {
             return;
         }
 
+        //buscamos el id
         for(Boat boat : boats) {
             if(boat.getId() == id) {
                 boatTripStatus = boat;
@@ -503,9 +600,11 @@ public class FleetManagement {
 
         if(boatTripStatus != null){
 
+            //si el barco está en puerto no habrá nada que informar
             if(boatTripStatus.getCurrentDistanceLeft() <= 0){
                 System.out.println("The selected ship is waiting at the dock");
             }
+            //si está en viaje mostramos la información diferenciando el tipo de barco y carga
             else {
                 if (boatTripStatus instanceof CargoShip) {
                     CargoShip cargoShip = (CargoShip) boatTripStatus;
@@ -551,38 +650,52 @@ public class FleetManagement {
                 }
             }
         }
+        //si no encontramos el id indicamos la situción por pantalla
         else{
             System.out.println("ID not found");
         }
     }
 
+    /**
+     * Metodo auxiliar que sirve para calcular el resto del viaje de un barco
+     * @param boats lista con todos los barcos registrados
+     */
     public static void boatTripStatusUpdate(ArrayList<Boat> boats){
 
         LocalDateTime currentDate = LocalDateTime.now();
         double potentialCoveredDistance = 0;
 
+        //recorremos la lista de barcos
         for(Boat boat : boats){
             double currentDist = boat.getCurrentDistanceLeft();
             double actualCovered = 0;
 
+            /*si la distancia que le queda es superior a 0 calculamos la nueva distancia con el tiempo que ha estado en
+            movimiento*/
             if(currentDist > 0){
                 double diffMinutes = ChronoUnit.MINUTES.between(boat.lastChecked, currentDate);
                 if(diffMinutes > 0) {
                     potentialCoveredDistance = (diffMinutes * boat.maxVelocity) / 60;
 
-
+                    /*si la distancia potencial es mayor que la ditancia real calculamos cuanto tiempo realmente le
+                    costó llegar actualizando este con ese valor la variable lastChecked e indicamos la distancia que
+                    le queda por recorrer a 0*/
                     if(potentialCoveredDistance >= currentDist){
                         actualCovered = currentDist;
                         long minutesToArrive = (long) ((currentDist* 60) / boat.maxVelocity);
                         boat.lastChecked = boat.lastChecked.plusMinutes(minutesToArrive);
                         boat.currentDistanceLeft = 0;
                     }
+                    /*en caso contrario el barco recorre toda la distancia potencial y le restamos esa distancia a
+                    la distancia que le queda por recorrer además de actualizar la ultima vez que comprobamos su estado*/
                     else{
                         actualCovered = potentialCoveredDistance;
                         boat.currentDistanceLeft = currentDist - actualCovered;
                         boat.lastChecked = currentDate;
                     }
 
+                    /*si la distancia sobrante es 0 o menor, el barco a llegado a su destino, actualizamos su distancia
+                    a 0, lo descargamos y añadimos un viaje a su capitán y a la todos los marineros*/
                     if(boat.currentDistanceLeft <= 0){
                         boat.currentDistanceLeft = 0;
                         boat.unload();
@@ -595,6 +708,7 @@ public class FleetManagement {
                     }
                 }
             }
+            //Si ha cubierto realmente distancia le sumamos esta distancia al capitan y a los marineros
             if(actualCovered > 0) {
                 boat.getCaptain().setMonthDistance(boat.getCaptain().getMonthDistance() + actualCovered);
                 for (Sailor sailor : boat.getCrew()) {

@@ -229,7 +229,7 @@ public class CargoShip extends Boat {
         if(this.currentCargo < this.maxCargo){
             if(!confirmDeparture()){
                 System.out.println("Operation cancelled");
-                return true;
+                return false;
             }
         }
         return true;

@@ -82,7 +82,7 @@ public class FleetManager extends Employee {
                 contractStartDate = LocalDate.parse(contractDate, formatter);
             }
 
-            salary = 12000.00;
+            double baseSalary = 12000.00;
 
             System.out.println("Indicate the experience of the Manager");
             experience = input.nextInt();
@@ -90,6 +90,8 @@ public class FleetManager extends Employee {
             if(experience < 0){
                 throw new NegativeNumberException("Experience cannot be negative");
             }
+
+            salary = baseSalary + (experience * 250);
         }
         //recogemos las excepciones lanzadas
         catch(DateTimeParseException e){
@@ -130,6 +132,7 @@ public class FleetManager extends Employee {
             if(today.getYear() > this.lastUpdatedYear){
                 this.salary += 250;
                 this.lastUpdatedYear = today.getYear();
+                this.experience++;
             }
         }
     }

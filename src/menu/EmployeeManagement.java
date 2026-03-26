@@ -10,10 +10,18 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Clase que permite el manejo de personal a través de varios metodos
+ */
 public class EmployeeManagement {
 
     Scanner input = new Scanner(System.in);
 
+    /**
+     * Metodo que sirve de menu para la clase, permitiendo al usuario navegar entre sus diferentes metodos
+     * @param employees lista con todos los usuarios registrados del sistema
+     * @param boats lista con todos los barcos del sistema
+     */
     public void personalManagementMenu(ArrayList<Employee> employees, ArrayList<Boat> boats) {
         int option = 0;
         while(true) {
@@ -60,6 +68,10 @@ public class EmployeeManagement {
         }
     }
 
+    /**
+     * Metodo que permite añadir nuevos empleados al sistema
+     * @param employee lista con todos los empleados del sistema
+     */
     public void addEmployee(ArrayList<Employee> employee){
 
         int option = 0;
@@ -97,10 +109,15 @@ public class EmployeeManagement {
         }
     }
 
+    /**
+     * Metodo que permite la eliminación de un empleado del sistema
+     * @param employees lista con todos los empleados registrados
+     */
     public void removeEmployee(ArrayList<Employee> employees){
 
         Employee employeeToRemove = null;
 
+        //preguntamos el id del usuario a borrar
         int id = 0;
         System.out.println("Type the ID of the Employee you want to remove");
         try {
@@ -112,11 +129,13 @@ public class EmployeeManagement {
             return;
         }
 
+        //buscamos el id del empleado
         for(Employee e: employees){
             if(e.getId() == id){
                 employeeToRemove = e;
             }
         }
+        //de encontrarlo preguntamos al usuario si realmente desea borrar al usuario mostrando por pantalla id y nombre
         if(employeeToRemove != null) {
             if (employeeToRemove instanceof Sailor) {
                 System.out.println("Are you sure you want to remove Sailor " + employeeToRemove.getName() + " " + employeeToRemove.getSurnames() + "?");
@@ -136,16 +155,23 @@ public class EmployeeManagement {
                 System.out.println("Cancelling operation");
             }
         }
+        //si no encontramos al empleado mostramos por pantalla que no se ha encontrado
         else{
             System.out.println("ID not found");
         }
     }
 
+    /**
+     * Metodo que permite asignar un empleado a un barco
+     * @param employee lista con todos los empleados del sistema
+     * @param boats lista con todos los barcos del sistema
+     */
     public void assignBoat(ArrayList<Employee> employee, ArrayList<Boat> boats){
 
         Employee employeeToAssign = null;
         Boat boatToAssign = null;
 
+        //preguntamos el id del usuarioa a asignar
         int employeeId = 0;
         System.out.println("Type the ID of the Employee you want to Assign to a boat");
         try {
@@ -157,16 +183,19 @@ public class EmployeeManagement {
             return;
         }
 
+        //lo buscamos
         for(Employee e: employee){
             if(e.getId() == employeeId){
                 employeeToAssign = e;
             }
         }
+        //de no encontrarlo cancelamos la operacion
         if(employeeToAssign == null) {
             System.out.println("Employee not found");
             return;
         }
 
+        //preguntamos el id del barco al que queremos asignar al empleado
         int boatId = 0;
         System.out.println("Type the ID of the boat you want to Assign to");
         try {
@@ -178,15 +207,18 @@ public class EmployeeManagement {
             return;
         }
 
+        //lo buscamos
         for(Boat boat: boats){
             if(boat.getId() == boatId){
                 boatToAssign = boat;
             }
         }
+        //de no encontrarlo cancelamos la operación
         if(boatToAssign == null){
             System.out.println("Boat not found");
             return;
         }
+        //si el barco encontrado está de viaje no podrá cambiar la tripulación
         if(boatToAssign.getCurrentDistanceLeft() > 0){
             System.out.println("The ship is already on trip. Wait until they arrive to a port to change its crew");
             return;
@@ -194,16 +226,21 @@ public class EmployeeManagement {
 
         if(employeeToAssign instanceof Sailor) {
             Sailor sailor = (Sailor) employeeToAssign;
+            //si el marinero ya está asignado al mismo barco lo mastramos por pantalla
             if(sailor.getAssignedBoat() == boatToAssign){
                 System.out.println("The Sailor is already assigned to that boat");
                 return;
             }
+            //si el barco esta completamente tripulado concelamos la operación, mostrando mensaje por pantalla
             else if(boatToAssign.getCrew().size() >= boatToAssign.getMaxCrew()){
                 System.out.println("The boat is fully crewed");
                 return;
             }
+            //si el marinero ya está asignado a un barco lo mostramos por pantalla
             else if(sailor.getAssignedBoat() != null){
                 System.out.println("The Sailor is already assigned to the Boat with ID: " + sailor.getAssignedBoat().getId() + " Named: " + sailor.getAssignedBoat().getName());
+                /*si el barco al que pertenece el marinero actualmente no está en un viaje permitiremos al usuario
+                 decidir si desea cambiar al marinero de barco*/
                 if(sailor.getAssignedBoat().getCurrentDistanceLeft() <= 0){
                     boolean change = changeBoat();
                     if(change){
@@ -218,6 +255,7 @@ public class EmployeeManagement {
                     System.out.println("Wait until the Ship arrive to a port to change its crew");
                 }
             }
+            //situación estandar donde el marinero es asignado al barco
             else{
                 sailor.setAssignedBoat(boatToAssign);
                 boatToAssign.getCrew().add(sailor);
@@ -227,18 +265,23 @@ public class EmployeeManagement {
         }
         else if(employeeToAssign instanceof Captain) {
             Captain captain = (Captain) employeeToAssign;
+            //si el capitán ya está asignado al barco seleccionado lo mostramos por pantalla
             if(captain.getAssignedBoat() == boatToAssign){
                 System.out.println("The Captain is already assigned to that boat");
                 return;
             }
+            //si el capitan tiene barco asignado o el barco seleccionado ya tiene captián entraremos en este flujo
             if(captain.getAssignedBoat() != null || boatToAssign.getCaptain() != null) {
 
+                //Si el capitán tiene barco y este esta de viaje indicaremos al usuario que debe esperar a su llegada
                 if(captain.getAssignedBoat() != null && captain.getAssignedBoat().getCurrentDistanceLeft() > 0){
                     System.out.println("Selected Captain is assigned to the Boat with ID: " + captain.getAssignedBoat().getId() + " Named: " + captain.getAssignedBoat().getName() + " which is currently on a trip");
                     System.out.println("Wait until arrival to change Captain");
                     return;
                 }
 
+                /*Si el capitán tiene barco y el barco destino tiene capitán permitiremos al usuario decidir si desea
+                cambiar a los capitanes, solo asignar al capitán seleccionado al barco seleccionado o cancelar*/
                 if(captain.getAssignedBoat() != null && boatToAssign.getCaptain() != null) {
                     int option = 0;
                     while(true) {
@@ -261,6 +304,7 @@ public class EmployeeManagement {
                         Captain captainToExchange = boatToAssign.getCaptain();
 
                         switch (option) {
+                            //opción de cambio total, ambos capitantes cambian de barco
                             case 1:
                                 captain.setAssignedBoat(boatToAssign);
                                 boatToAssign.setCaptain(captain);
@@ -269,6 +313,8 @@ public class EmployeeManagement {
                                 boatToExchange.setCaptain(captainToExchange);
                                 System.out.println("Exchange Completed");
                                 return;
+                            /*opción de relevo donde el barco anterior del captián se queda vacio y el captián del
+                            barco destino queda sin asignar a ningún barco*/
                             case 2:
                                 boatToAssign.setCaptain(captain);
                                 captain.setAssignedBoat(boatToAssign);
@@ -277,6 +323,7 @@ public class EmployeeManagement {
                                 captainToExchange.setAssignedBoat(null);
                                 System.out.println("Change Completed");
                                 return;
+                            //Opción de cancelación de la asignación
                             case 3:
                                 System.out.println("Cancelling operation");
                                 return;
@@ -287,8 +334,10 @@ public class EmployeeManagement {
                     }
                 }
 
+                //si solo el capitán tiene barco asignado mostraremos el mensaje por pantalla
                 if (captain.getAssignedBoat() != null) {
                     System.out.println("The Captain is already assigned to the Boat with ID: " + captain.getAssignedBoat().getId() + " Named: " + captain.getAssignedBoat().getName());
+                    //si el barco del capitán no está de viaje el usuario podrá decidir si este cambia de barco
                     if (captain.getAssignedBoat().getCurrentDistanceLeft() <= 0) {
                         boolean change = changeBoat();
                         if (change) {
@@ -300,8 +349,10 @@ public class EmployeeManagement {
                         }
                     }
                 }
+                //si es solo el barco quien tiene captán asignado le mostramos al usuario la situación por pantalla
                 if (boatToAssign.getCaptain() != null) {
                     System.out.println("The Boat has already the captain " + boatToAssign.getCaptain().getName() + " " + boatToAssign.getCaptain().getSurnames() + " Assigned");
+                    //el usuario podrá cambiar la situación dado que ya hemos comprobado antes que el barco esta en puerto
                     boolean change = changeBoat();
                     if(change){
                         System.out.println("Changing assigned Captain from " + boatToAssign.getCaptain().getName() + " " + boatToAssign.getCaptain().getSurnames() + " to " + captain.getName() + " " + captain.getSurnames());
@@ -312,6 +363,7 @@ public class EmployeeManagement {
                     }
                 }
             }
+            //caso base donde el capitán se asigna al barco
             else{
                 captain.setAssignedBoat(boatToAssign);
                 boatToAssign.setCaptain(captain);
@@ -320,12 +372,15 @@ public class EmployeeManagement {
         }
         else if(employeeToAssign instanceof FleetManager) {
             FleetManager fleetManager = (FleetManager) employeeToAssign;
+            //si el asistente de flota tiene 5 o mas de cinco barcos no se podrá añadir otro barco
             if(fleetManager.getManagedBoats().size() >= 5){
                 System.out.println("The Fleet Manager has the maximum managed boats assigned");
             }
+            //mostramos por pantalla si el barco ya tiene al asistente de flota seleccionado
             else if(boatToAssign.getAssignedFM() == fleetManager){
                 System.out.println("The Fleet Manager is already managing that boat");
             }
+            //si el barco ya tiene asistente de flota permitiremos al usuario cambiar esta situación
             else if(boatToAssign.getAssignedFM() != null){
                 System.out.println("The boat has already been assigned to the Fleet Manager " + boatToAssign.getAssignedFM().getId() + " " + boatToAssign.getAssignedFM().getName() + " " + boatToAssign.getAssignedFM().getSurnames());
                 boolean change = changeBoat();
@@ -336,6 +391,7 @@ public class EmployeeManagement {
                     System.out.println("Change completed");
                 }
             }
+            //caso base donde el barco se añade a la lista de barcos gestionados por el assitente de flota
             else{
                 fleetManager.getManagedBoats().add(boatToAssign);
                 boatToAssign.setAssignedFM(fleetManager);
@@ -344,11 +400,16 @@ public class EmployeeManagement {
         }
     }
 
+    /**
+     * Metodo que sirve para desasignaro a un empleado de un barco
+     * @param employees lista con todos los usuarios registrados en el sistema
+     */
     public void unassignBoat(ArrayList<Employee> employees){
 
         Employee employeeToUnassign = null;
         Boat boatToUnassign = null;
 
+        //solicitamos al usuario que introduzca el id del empleado adesasignar
         int employeeId = 0;
         System.out.println("Type the ID of the Employee you want to Assign to a boat");
         try {
@@ -369,40 +430,49 @@ public class EmployeeManagement {
                 Sailor sailor =  (Sailor) employeeToUnassign;
 
                 if(sailor.getAssignedBoat() != null){
+                    //si el marinero seleccionado no está en puerto lo comunicamos por pantalla y cancelamos
                     if(sailor.getAssignedBoat().getCurrentDistanceLeft() > 0){
                         System.out.println("The ship is on trip. Wait until arrival to change its staff");
                     }
+                    //de estar en puerto completamos la operacion
                     else{
                         sailor.getAssignedBoat().getCrew().remove(sailor);
                         sailor.setAssignedBoat(null);
                     }
                 }
+                //si el marinero no está asignado a ningún barco lo mostramos por pantalla
                 else{
                     System.out.println("The Sailor is not assigned to any ship yet");
                 }
             }
 
+
             if(employeeToUnassign instanceof Captain){
                 Captain captain = (Captain) employeeToUnassign;
 
                 if(captain.getAssignedBoat() != null){
+                    //Si el capitán no está en puerto mostramos la situación por pantalla
                     if(captain.getAssignedBoat().getCurrentDistanceLeft() > 0){
                         System.out.println("The ship is on trip. Wait until arrival to change its staff");
                     }
+                    //de estar en puerto completamos la operación
                     else{
                         captain.getAssignedBoat().setCaptain(null);
                         captain.setAssignedBoat(null);
                     }
                 }
+                //si el Capitán no está asignado a un barco lo comunicamos al usuario
                 System.out.println("The Captain is not assigned to any ship yet");
             }
 
             if(employeeToUnassign instanceof FleetManager){
                 FleetManager fleetManager = (FleetManager) employeeToUnassign;
 
+                //si el asistente de flota no está gestionando ningún barco lo comunicamos por pantalla
                 if(fleetManager.getManagedBoats().isEmpty()){
                     System.out.println("The Fleet Manager is not Managing any ship yet");
                 }
+                //de lo contrario solicitamos al usuario que barco quiere que se le retire al asistente de flota
                 else{
                     System.out.println("Select the boat you want to unassign");
                     for(int i = 0; i < fleetManager.getManagedBoats().size(); i++){
@@ -423,9 +493,12 @@ public class EmployeeManagement {
                             input.nextLine();
                         }
                     }
+                    /*si el barco selleccionado no está en puerto cancelamos la operación mostrando la situación
+                    por pantalla*/
                     if(boatToUnassign.getCurrentDistanceLeft() > 0){
                         System.out.println("The selected ship is on a trip. Wait until arrival to change its staff");
                     }
+                    //de lo contrario completamos la operación
                     else{
                         boatToUnassign.setAssignedFM(null);
                         fleetManager.getManagedBoats().remove(boatToUnassign);
@@ -435,6 +508,11 @@ public class EmployeeManagement {
         }
     }
 
+    /**
+     * Metodo que muestra por pantalla todos los empleados del sistema imprimiendo su id, nombres, apellidos y barco
+     * asignado
+     * @param employees lista con todos los empleados del registrados
+     */
     public void employeeList(ArrayList<Employee> employees) {
 
         for (Employee employee : employees) {
@@ -451,28 +529,34 @@ public class EmployeeManagement {
                 if (sailor.getAssignedBoat() != null) {
                     System.out.println("Employee ID: " + sailor.getId() + " Sailor: " + sailor.getName() + " " + sailor.getSurnames() + " Is assigned to Ship with ID: " + sailor.getAssignedBoat().getId() + " " + sailor.getAssignedBoat().getName());
                 }
-                System.out.println("Employee ID: " + employee.getId() + " Sailor: " + employee.getName() + " " + employee.getSurnames() + " Is not assigned to any Ship");
+                else {
+                    System.out.println("Employee ID: " + employee.getId() + " Sailor: " + employee.getName() + " " + employee.getSurnames() + " Is not assigned to any Ship");
+                }
             }
             if (employee instanceof FleetManager) {
                 FleetManager fleetManager = (FleetManager) employee;
+                System.out.println("Employee ID: " + employee.getId() + " Fleet Manager " + employee.getName() + " " + employee.getSurnames());
                 if (!fleetManager.getManagedBoats().isEmpty()) {
-                    System.out.println("Employee ID: " + employee.getId() + " Fleet Manager " + employee.getName() + " " + employee.getSurnames());
                     System.out.println("Is managin the current Fleet: ");
                     for (Boat boat : fleetManager.getManagedBoats()) {
                         System.out.println("Boat ID: " + boat.getId() + " Named: " + boat.getName());
                     }
                 } else {
-                    System.out.println("Employee ID: " + employee.getId() + " Fleet Manager " + employee.getName() + " " + employee.getSurnames());
-                    System.out.println("Currently has no fleet Assigned to Manage");
+                    System.out.println("The Fleet Manager has no fleet Assigned to Manage");
                 }
             }
         }
     }
 
+    /**
+     * Metodo que sirve para poder ver la información completa de un empleado
+     * @param employees lista con todos los empleados registrados
+     */
     public void employeeInfo(ArrayList<Employee> employees) {
 
         Employee infoEmployee = null;
 
+        //solicitamos la id del empleado del cual se desea la información
         int id = 0;
         System.out.println("Type the id of the employee");
         try {
@@ -490,6 +574,7 @@ public class EmployeeManagement {
             }
         }
 
+        //dependiendo del tipo de empleado imprimiermos su tipo y sus variables unicas
         if(infoEmployee != null){
             if(infoEmployee instanceof Sailor) {
                 Sailor sailorInfo = (Sailor) infoEmployee;
@@ -550,6 +635,10 @@ public class EmployeeManagement {
         }
     }
 
+    /**
+     * Metodo auxiliar que sirve para que el usuario decida sobre si cambiar al personal o no
+     * @return booleano true si decide cambiar la situación de la tripulación o false si la rechaza
+     */
     public boolean changeBoat(){
 
         System.out.println("Do you want to change? (Y/N)");

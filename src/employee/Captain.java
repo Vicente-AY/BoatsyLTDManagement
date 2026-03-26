@@ -88,7 +88,7 @@ public class Captain extends Employee{
 
 
 
-            salary = 3500.00;
+            double baseSalary = 3500.00;
 
             System.out.println("Indicate the experience of the Captain");
             experience = input.nextInt();
@@ -96,6 +96,8 @@ public class Captain extends Employee{
             if(experience < 0){
                 throw new NegativeNumberException("Experience cannot be negative");
             }
+
+            salary = baseSalary + (experience * 75);
         }
         //recogemos las excepciones lanzadas
         catch(DateTimeParseException e){
@@ -143,6 +145,8 @@ public class Captain extends Employee{
         if(this.trips >= nextTripsForRise){
             this.salary += 150;
             this.nextTripsForRise += 100;
+            this.bonus = 0;
+            this.monthDistance = 0;
         }
 
         //aumentamos el salario si ha cumplido un nuevo año en la compalia
@@ -150,6 +154,7 @@ public class Captain extends Employee{
             if(today.getYear() > this.lastUpdatedYear){
                 this.salary += 75;
                 this.lastUpdatedYear = today.getYear();
+                this.experience++;
             }
         }
     }

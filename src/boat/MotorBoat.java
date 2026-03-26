@@ -240,7 +240,7 @@ public class MotorBoat extends Boat{
         if(this.currentPassengers < this.maxPassengers){
             if(!confirmDeparture()){
                 System.out.println("Operation cancelled");
-                return true;
+                return false;
             }
         }
         return true;

@@ -86,7 +86,7 @@ public class Sailor extends Employee {
                 contractStartDate = LocalDate.parse(contractDate, formatter);
             }
 
-            salary = 1500.00;
+            double baseSalary = 1500.00;
 
             System.out.println("Indicate the experience of the sailor");
             experience = input.nextInt();
@@ -94,6 +94,8 @@ public class Sailor extends Employee {
             if(experience < 0){
                 throw new NegativeNumberException("Experience cannot be negative");
             }
+
+            salary = baseSalary + (experience * 25);
         }
         //capturamos las excepciones lanzadas
         catch(DateTimeParseException e){
@@ -141,6 +143,8 @@ public class Sailor extends Employee {
         if(this.trips >= nextTripsForRise){
             this.salary += 100;
             this.nextTripsForRise += 150;
+            this.bonus = 0;
+            this.monthDistance = 0;
         }
 
         //si cumple otro año en la compalia se le actualiza el salario nuevamente
@@ -148,6 +152,7 @@ public class Sailor extends Employee {
             if(today.getYear() > this.lastUpdatedYear){
                 this.salary += 25;
                 this.lastUpdatedYear = today.getYear();
+                this.experience++;
             }
         }
     }
