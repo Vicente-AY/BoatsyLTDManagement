@@ -2,6 +2,7 @@ package menu;
 
 import boat.*;
 import employee.*;
+import exceptions.NegativeNumberException;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -538,9 +539,15 @@ public class FleetManagement {
         try {
             id = input.nextInt();
             input.nextLine();
+            if(id < 0){
+                throw new NegativeNumberException("Distance cannot be negative");
+            }
         }
         catch (InputMismatchException e) {
-            System.err.println("Please enter a valid Number");
+            System.err.println("Please enter a valid Number " + e.getMessage());
+        }
+        catch(NegativeNumberException e){
+            System.err.println("Please enter a valid Number " + e.getMessage());
         }
 
         //buscamos el barco
@@ -617,7 +624,7 @@ public class FleetManagement {
                     System.out.println("Current Crew: " + cargoShip.getCrew().size() + "/" + cargoShip.getMaxCrew());
                     System.out.println("Current Captain: " + cargoShip.getCaptain().getName() + " " + cargoShip.getCaptain().getSurnames());
                     System.out.println("Current Fleet Manager: " + cargoShip.getAssignedFM().getName() + " " + cargoShip.getAssignedFM().getSurnames());
-                    System.out.println("Current Distance left: " + String.format("%.2", cargoShip.getCurrentDistanceLeft()) + "Km");
+                    System.out.println("Current Distance left: " + String.format("%.2f", cargoShip.getCurrentDistanceLeft()) + "Km");
                     System.out.println("Approximate arrival Date: " + cargoShip.getDateOfArrival().format(formatter));
                 }
                 if(boatTripStatus instanceof MotorBoat) {
