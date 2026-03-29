@@ -109,7 +109,7 @@ public class FleetManagement {
                 case 3:
                     SailingBoat.createSailingBoat(boats);
                     break;
-                case 5:
+                case 4:
                     System.out.println("Back to the Manage Fleet Menu");
                     return;
                 default:
