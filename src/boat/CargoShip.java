@@ -75,7 +75,7 @@ public class CargoShip extends Boat {
             System.out.println("Indicate de weight of the ship (Tons without load - Max 250.000)");
             weight = input.nextDouble();
             input.nextLine();
-            if(weight <= 0 || weight > 250.000){
+            if(weight <= 0 || weight > 250_000){
                 throw new FieldRangeOutOfBoundsException("The maximum weight of a Cargo Ship cannot be less or equal to 0 or surpass 250.000 Tons");
             }
 
